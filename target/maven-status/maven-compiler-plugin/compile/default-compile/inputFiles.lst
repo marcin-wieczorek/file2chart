@@ -1,0 +1,13 @@
+/home/mwieczorek/git/file2chart/src/main/java/pl/marcinwieczorek/file2chart/model/enums/FileFormat.java
+/home/mwieczorek/git/file2chart/src/main/java/pl/marcinwieczorek/file2chart/model/enums/SortType.java
+/home/mwieczorek/git/file2chart/src/main/java/pl/marcinwieczorek/file2chart/model/dto/output/CSV2TableOutput.java
+/home/mwieczorek/git/file2chart/src/main/java/pl/marcinwieczorek/file2chart/service/validator/FileValidator.java
+/home/mwieczorek/git/file2chart/src/main/java/pl/marcinwieczorek/file2chart/api/TableController.java
+/home/mwieczorek/git/file2chart/src/main/java/pl/marcinwieczorek/file2chart/model/dto/local/CSV2TableInput.java
+/home/mwieczorek/git/file2chart/src/main/java/pl/marcinwieczorek/file2chart/model/dto/local/Coordinate.java
+/home/mwieczorek/git/file2chart/src/main/java/pl/marcinwieczorek/file2chart/model/dto/local/Sort.java
+/home/mwieczorek/git/file2chart/src/main/java/pl/marcinwieczorek/file2chart/service/FileConverter.java
+/home/mwieczorek/git/file2chart/src/main/java/pl/marcinwieczorek/file2chart/service/TableService.java
+/home/mwieczorek/git/file2chart/src/main/java/pl/marcinwieczorek/file2chart/File2ChartApplication.java
+/home/mwieczorek/git/file2chart/src/main/java/pl/marcinwieczorek/file2chart/config/jackson/JacksonObjectMapperConfig.java
+/home/mwieczorek/git/file2chart/src/main/java/pl/marcinwieczorek/file2chart/service/util/FileUtils.java
