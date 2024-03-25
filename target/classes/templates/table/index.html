@@ -16,11 +16,11 @@
         <table id="table" class="display" style="width:100%">
             <thead>
                 <tr>
-                    <th th:each="label : ${tableOutput.getHeaders}" th:text="${label}"></th>
+                    <th th:each="label : ${data.getHeaders}" th:text="${label}"></th>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="row : ${tableOutput.getCells}">
+                <tr th:each="row : ${data.getCells}">
                     <td th:each="cell : ${row}" th:text="${cell}"></td>
                 </tr>
             </tbody>

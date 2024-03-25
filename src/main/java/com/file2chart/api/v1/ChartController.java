@@ -1,11 +1,8 @@
 package com.file2chart.api.v1;
 
-import com.file2chart.model.dto.output.ChartOutput;
 import com.file2chart.service.ChartService;
-import com.file2chart.service.compression.DataCompressionService;
 import com.file2chart.service.files.FileValidator;
-import com.file2chart.service.utils.CryptoService;
-import com.file2chart.service.utils.JsonConverter;
+import com.file2chart.service.utils.SecureRedirectService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,28 +10,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 @Controller
 @CrossOrigin(origins = "*")
 @AllArgsConstructor
 public class ChartController {
 
     private final ChartService chartService;
-    private final JsonConverter jsonConverter;
-    private final CryptoService cryptoService;
-    private final DataCompressionService dataCompressionService;
+    private final SecureRedirectService secureRedirectService;
 
     @PostMapping("/chart/bar/html")
-    public String upload(@RequestParam("file") MultipartFile file) throws Exception {
+    public String redirectToBarChart(@RequestParam("file") MultipartFile file) {
         FileValidator.validateFileFormat(file);
-        ChartOutput chartOutput = chartService.generateChart(file);
-        var json = jsonConverter.toJSON(chartOutput, false);
-        var compressedJson = dataCompressionService.compress(json);
-        var encryptedMessage = cryptoService.encrypt(compressedJson);
-        var encryptedMessageParam = URLEncoder.encode(encryptedMessage, StandardCharsets.UTF_8.toString());
-        return "redirect:/draw/chart/bar?data=" + encryptedMessageParam;
+        return secureRedirectService.generateSecureRedirect(chartService::generateChart, file, "/draw/chart/bar");
     }
 
+    @PostMapping("/chart/line/html")
+    public String redirectToLineChart(@RequestParam("file") MultipartFile file) {
+        FileValidator.validateFileFormat(file);
+        return secureRedirectService.generateSecureRedirect(chartService::generateChart, file, "/draw/chart/line");
+    }
 }

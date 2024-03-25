@@ -20,7 +20,8 @@
                         const dataset = {
                             label: key,
                             data: chartData[key],
-                            borderWidth: 1
+                            fill: false,
+                            tension: 0.1
                         };
                         datasets.push(dataset);
                         labels.push(key);
@@ -28,7 +29,7 @@
                 }
 
                 const chartConfig = {
-                    type: 'bar',
+                    type: 'line',
                     data: {
                         labels: labels,
                         datasets: datasets

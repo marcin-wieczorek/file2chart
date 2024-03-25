@@ -1,11 +1,8 @@
 package com.file2chart.api.v1;
 
-import com.file2chart.model.dto.output.TableOutput;
 import com.file2chart.service.TableService;
-import com.file2chart.service.compression.DataCompressionService;
 import com.file2chart.service.files.FileValidator;
-import com.file2chart.service.utils.CryptoService;
-import com.file2chart.service.utils.JsonConverter;
+import com.file2chart.service.utils.SecureRedirectService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,27 +10,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 @Controller
 @CrossOrigin(origins = "*")
 @AllArgsConstructor
 public class TableController {
 
     private final TableService tableService;
-    private final JsonConverter jsonConverter;
-    private final CryptoService cryptoService;
-    private final DataCompressionService dataCompressionService;
+    private final SecureRedirectService secureRedirectService;
 
     @PostMapping("/table/html")
-    public String upload(@RequestParam("file") MultipartFile file) throws Exception {
+    public String upload(@RequestParam("file") MultipartFile file) {
         FileValidator.validateFileFormat(file);
-        TableOutput tableOutput = tableService.generateTable(file);
-        var json = jsonConverter.toJSON(tableOutput, false);
-        var compressedJson = dataCompressionService.compress(json);
-        var encryptedMessage = cryptoService.encrypt(compressedJson);
-        var encryptedMessageParam = URLEncoder.encode(encryptedMessage, StandardCharsets.UTF_8.toString());
-        return "redirect:/draw/table?data=" + encryptedMessageParam;
+        return secureRedirectService.generateSecureRedirect(tableService::generateTable, file, "/draw/table");
     }
 }
