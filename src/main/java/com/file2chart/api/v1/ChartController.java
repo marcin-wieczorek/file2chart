@@ -1,6 +1,8 @@
 package com.file2chart.api.v1;
 
+import com.file2chart.model.dto.output.ChartOutput;
 import com.file2chart.model.dto.output.TableOutput;
+import com.file2chart.service.ChartService;
 import com.file2chart.service.CompressionService;
 import com.file2chart.service.FileFormatValidator;
 import com.file2chart.service.TableService;
@@ -19,21 +21,22 @@ import java.nio.charset.StandardCharsets;
 @Controller
 @CrossOrigin(origins = "*")
 @AllArgsConstructor
-public class TableController {
+public class ChartController {
 
-    private final TableService tableService;
+    private final ChartService chartService;
     private final JsonConverter jsonConverter;
     private final CryptoService cryptoService;
     private final CompressionService compressionService;
 
-    @PostMapping("/table/html")
+    @PostMapping("/chart/bar/html")
     public String upload(@RequestParam("file") MultipartFile file) throws Exception {
         FileFormatValidator.validate(file);
-        TableOutput tableOutput = tableService.generateTable(file);
-        var json = jsonConverter.toJSON(tableOutput, false);
+        ChartOutput chartOutput = chartService.generateChart(file);
+        var json = jsonConverter.toJSON(chartOutput, false);
         var compressedJson = compressionService.compress(json);
         var encryptedMessage = cryptoService.encrypt(compressedJson);
         var encryptedMessageParam = URLEncoder.encode(encryptedMessage, StandardCharsets.UTF_8.toString());
-        return "redirect:/draw/table?data=" + encryptedMessageParam;
+        return "redirect:/draw/chart/bar?data=" + encryptedMessageParam;
     }
+
 }

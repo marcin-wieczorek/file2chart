@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @RequestMapping("/v2")
 public class ModelController {
+
     private final ModelService modelService;
 
     @PostMapping(

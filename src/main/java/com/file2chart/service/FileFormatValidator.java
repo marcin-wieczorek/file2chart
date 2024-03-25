@@ -13,6 +13,11 @@ import java.util.stream.Collectors;
 public class FileFormatValidator {
 
     public static void validate(MultipartFile file) {
+        validateFileFormat(file);
+        // TODO: Other validators
+    }
+
+    private static void validateFileFormat(MultipartFile file) {
         String fileExtension = FileUtils.getFileExtension(file.getOriginalFilename());
 
         boolean isValidFormat = Arrays.stream(FileFormat.values())
