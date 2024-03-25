@@ -32,14 +32,19 @@ public class DrawController {
         return processDrawing(drawingService::drawChart, data, model, "chart/doughnut/index");
     }
 
+    @RequestMapping("/draw/chart/line")
+    public String drawLineChart(@RequestParam String data, Model model) {
+        return processDrawing(drawingService::drawChart, data, model, "chart/line/index");
+    }
+
     @RequestMapping("/draw/chart/pie")
     public String drawPieChart(@RequestParam String data, Model model) {
         return processDrawing(drawingService::drawChart, data, model, "chart/pie/index");
     }
 
-    @RequestMapping("/draw/chart/line")
-    public String drawLineChart(@RequestParam String data, Model model) {
-        return processDrawing(drawingService::drawChart, data, model, "chart/line/index");
+    @RequestMapping("/draw/chart/polar-area")
+    public String drawPolarAreaChart(@RequestParam String data, Model model) {
+        return processDrawing(drawingService::drawChart, data, model, "chart/polar-area/index");
     }
 
     @RequestMapping("/draw/chart/radar")

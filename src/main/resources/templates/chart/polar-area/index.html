@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Chart bar</title>
+        <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script th:inline="javascript">
+            $(document).ready(function() {
+                const ctx = document.getElementById('chart');
+
+                const chartData = /*[[${data.getMap}]]*/ {};
+
+                const labels = [];
+                const datasets = [];
+
+                for (const key in chartData) {
+                    if (chartData.hasOwnProperty(key)) {
+                        const dataset = {
+                            label: key,
+                            data: chartData[key],
+                            fill: true
+                        };
+                        datasets.push(dataset);
+                        labels.push(key);
+                    }
+                }
+
+                const chartConfig = {
+                    type: 'polarArea',
+                    data: {
+                        labels: labels,
+                        datasets: datasets
+                    },
+                    options: {}
+                };
+
+                new Chart(ctx, chartConfig);
+            });
+        </script>
+    </head>
+    <body>
+        <div>
+            <canvas id="chart"></canvas>
+        </div>
+    </body>
+</html>

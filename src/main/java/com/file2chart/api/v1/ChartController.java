@@ -30,16 +30,22 @@ public class ChartController {
         return secureRedirectService.generateSecureRedirect(chartService::generateChart, file, "/draw/chart/doughnut");
     }
 
+    @PostMapping("/chart/line/html")
+    public String redirectToLineChart(@RequestParam("file") MultipartFile file) {
+        FileValidator.validateFileFormat(file);
+        return secureRedirectService.generateSecureRedirect(chartService::generateChart, file, "/draw/chart/line");
+    }
+
     @PostMapping("/chart/pie/html")
     public String redirectToPieChart(@RequestParam("file") MultipartFile file) {
         FileValidator.validateFileFormat(file);
         return secureRedirectService.generateSecureRedirect(chartService::generateChart, file, "/draw/chart/pie");
     }
 
-    @PostMapping("/chart/line/html")
-    public String redirectToLineChart(@RequestParam("file") MultipartFile file) {
+    @PostMapping("/chart/polar-area/html")
+    public String redirectToPolarAreaChart(@RequestParam("file") MultipartFile file) {
         FileValidator.validateFileFormat(file);
-        return secureRedirectService.generateSecureRedirect(chartService::generateChart, file, "/draw/chart/line");
+        return secureRedirectService.generateSecureRedirect(chartService::generateChart, file, "/draw/chart/polar-area");
     }
 
     @PostMapping("/chart/radar/html")
