@@ -23,12 +23,22 @@ public class DrawController {
     }
 
     @RequestMapping("/draw/chart/bar")
-    public String drawChartBar(@RequestParam String data, Model model) {
+    public String drawBarChart(@RequestParam String data, Model model) {
         return processDrawing(drawingService::drawChart, data, model, "chart/bar/index");
     }
 
+    @RequestMapping("/draw/chart/doughnut")
+    public String drawDoughnutChart(@RequestParam String data, Model model) {
+        return processDrawing(drawingService::drawChart, data, model, "chart/doughnut/index");
+    }
+
+    @RequestMapping("/draw/chart/pie")
+    public String drawPieChart(@RequestParam String data, Model model) {
+        return processDrawing(drawingService::drawChart, data, model, "chart/pie/index");
+    }
+
     @RequestMapping("/draw/chart/line")
-    public String drawLineBar(@RequestParam String data, Model model) {
+    public String drawLineChart(@RequestParam String data, Model model) {
         return processDrawing(drawingService::drawChart, data, model, "chart/line/index");
     }
 
