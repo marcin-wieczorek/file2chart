@@ -41,4 +41,10 @@ public class ChartController {
         FileValidator.validateFileFormat(file);
         return secureRedirectService.generateSecureRedirect(chartService::generateChart, file, "/draw/chart/line");
     }
+
+    @PostMapping("/chart/radar/html")
+    public String redirectToRadarChart(@RequestParam("file") MultipartFile file) {
+        FileValidator.validateFileFormat(file);
+        return secureRedirectService.generateSecureRedirect(chartService::generateChart, file, "/draw/chart/radar");
+    }
 }

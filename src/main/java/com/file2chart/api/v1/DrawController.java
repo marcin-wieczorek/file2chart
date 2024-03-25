@@ -42,6 +42,11 @@ public class DrawController {
         return processDrawing(drawingService::drawChart, data, model, "chart/line/index");
     }
 
+    @RequestMapping("/draw/chart/radar")
+    public String drawRadarChart(@RequestParam String data, Model model) {
+        return processDrawing(drawingService::drawChart, data, model, "chart/radar/index");
+    }
+
     private static <T, R> String processDrawing(Function<T, R> function, T input, Model model, String view) {
         R result = function.apply(input);
         model.addAttribute("data", result);
