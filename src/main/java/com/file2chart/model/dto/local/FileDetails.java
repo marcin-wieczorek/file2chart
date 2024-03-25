@@ -1,4 +1,4 @@
-package com.file2chart.model;
+package com.file2chart.model.dto.local;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

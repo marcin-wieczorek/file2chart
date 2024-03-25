@@ -1,11 +1,9 @@
 package com.file2chart.api.v1;
 
 import com.file2chart.model.dto.output.ChartOutput;
-import com.file2chart.model.dto.output.TableOutput;
 import com.file2chart.service.ChartService;
-import com.file2chart.service.CompressionService;
+import com.file2chart.service.DataCompressionService;
 import com.file2chart.service.FileFormatValidator;
-import com.file2chart.service.TableService;
 import com.file2chart.service.utils.CryptoService;
 import com.file2chart.service.utils.JsonConverter;
 import lombok.AllArgsConstructor;
@@ -26,14 +24,14 @@ public class ChartController {
     private final ChartService chartService;
     private final JsonConverter jsonConverter;
     private final CryptoService cryptoService;
-    private final CompressionService compressionService;
+    private final DataCompressionService dataCompressionService;
 
     @PostMapping("/chart/bar/html")
     public String upload(@RequestParam("file") MultipartFile file) throws Exception {
         FileFormatValidator.validate(file);
         ChartOutput chartOutput = chartService.generateChart(file);
         var json = jsonConverter.toJSON(chartOutput, false);
-        var compressedJson = compressionService.compress(json);
+        var compressedJson = dataCompressionService.compress(json);
         var encryptedMessage = cryptoService.encrypt(compressedJson);
         var encryptedMessageParam = URLEncoder.encode(encryptedMessage, StandardCharsets.UTF_8.toString());
         return "redirect:/draw/chart/bar?data=" + encryptedMessageParam;
