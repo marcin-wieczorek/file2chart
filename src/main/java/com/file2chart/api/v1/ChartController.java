@@ -3,7 +3,7 @@ package com.file2chart.api.v1;
 import com.file2chart.model.dto.output.ChartOutput;
 import com.file2chart.service.ChartService;
 import com.file2chart.service.DataCompressionService;
-import com.file2chart.service.FileFormatValidator;
+import com.file2chart.service.FileValidator;
 import com.file2chart.service.utils.CryptoService;
 import com.file2chart.service.utils.JsonConverter;
 import lombok.AllArgsConstructor;
@@ -28,7 +28,7 @@ public class ChartController {
 
     @PostMapping("/chart/bar/html")
     public String upload(@RequestParam("file") MultipartFile file) throws Exception {
-        FileFormatValidator.validate(file);
+        FileValidator.validateFileFormat(file);
         ChartOutput chartOutput = chartService.generateChart(file);
         var json = jsonConverter.toJSON(chartOutput, false);
         var compressedJson = dataCompressionService.compress(json);

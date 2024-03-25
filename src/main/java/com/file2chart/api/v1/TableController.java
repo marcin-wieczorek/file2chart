@@ -2,7 +2,7 @@ package com.file2chart.api.v1;
 
 import com.file2chart.model.dto.output.TableOutput;
 import com.file2chart.service.DataCompressionService;
-import com.file2chart.service.FileFormatValidator;
+import com.file2chart.service.FileValidator;
 import com.file2chart.service.TableService;
 import com.file2chart.service.utils.CryptoService;
 import com.file2chart.service.utils.JsonConverter;
@@ -28,7 +28,7 @@ public class TableController {
 
     @PostMapping("/table/html")
     public String upload(@RequestParam("file") MultipartFile file) throws Exception {
-        FileFormatValidator.validate(file);
+        FileValidator.validateFileFormat(file);
         TableOutput tableOutput = tableService.generateTable(file);
         var json = jsonConverter.toJSON(tableOutput, false);
         var compressedJson = dataCompressionService.compress(json);

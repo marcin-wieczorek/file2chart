@@ -1,5 +1,6 @@
 package com.file2chart.service;
 
+import com.file2chart.model.dto.local.ChartModel;
 import com.file2chart.model.enums.FileFormat;
 import com.file2chart.service.utils.FileUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -10,14 +11,9 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class FileFormatValidator {
+public class FileValidator {
 
-    public static void validate(MultipartFile file) {
-        validateFileFormat(file);
-        // TODO: Other validators
-    }
-
-    private static void validateFileFormat(MultipartFile file) {
+    public static void validateFileFormat(MultipartFile file) {
         String fileExtension = FileUtils.getFileExtension(file.getOriginalFilename());
 
         boolean isValidFormat = Arrays.stream(FileFormat.values())
@@ -31,5 +27,26 @@ public class FileFormatValidator {
             log.error("Invalid file format. { 'provided': '{}', 'supported': '{}' }", fileExtension, supportedFormats);
             throw new RuntimeException("Invalid file format. Supported formats: " + supportedFormats);
         }
+    }
+
+    public static void validateNumericValue(String value) {
+        boolean isValid = isNumeric(value);
+
+        if (!isValid) {
+            log.error("One or more values contain non-numeric characters.");
+            throw new RuntimeException("One or more values contain non-numeric characters.");
+        }
+    }
+
+    private static boolean isNumeric(String str) {
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+        for (char c : str.toCharArray()) {
+            if (!Character.isDigit(c)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

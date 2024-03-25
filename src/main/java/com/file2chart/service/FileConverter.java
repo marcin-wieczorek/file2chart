@@ -57,6 +57,7 @@ public abstract class FileConverter {
             List<String> headers = List.of(record.getMetaData().headers());
             for (int i = 0; i < values.length; i++) {
                 String header = headers.get(i);
+                FileValidator.validateNumericValue(values[i]);
                 resultMap.get(header).add(values[i]);
             }
         }

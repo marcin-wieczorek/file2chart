@@ -1,7 +1,7 @@
 package com.file2chart.api.v2;
 
 import com.file2chart.model.dto.local.GenericModel;
-import com.file2chart.service.FileFormatValidator;
+import com.file2chart.service.FileValidator;
 import com.file2chart.service.GenericModelService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
@@ -25,7 +25,7 @@ public class ModelController {
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public ResponseEntity<GenericModel> upload(@RequestParam("file") MultipartFile file) {
-        FileFormatValidator.validate(file);
+        FileValidator.validateFileFormat(file);
         GenericModel model = genericModelService.creteModel(file);
         return ResponseEntity.ok(model);
     }
