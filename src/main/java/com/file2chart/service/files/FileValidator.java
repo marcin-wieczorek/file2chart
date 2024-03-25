@@ -1,6 +1,5 @@
-package com.file2chart.service;
+package com.file2chart.service.files;
 
-import com.file2chart.model.dto.local.ChartModel;
 import com.file2chart.model.enums.FileFormat;
 import com.file2chart.service.utils.FileUtils;
 import lombok.extern.slf4j.Slf4j;

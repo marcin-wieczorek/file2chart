@@ -1,4 +1,4 @@
-package com.file2chart.service;
+package com.file2chart.service.files;
 
 import com.file2chart.model.dto.local.CSVModel;
 import com.file2chart.model.dto.local.ChartModel;

@@ -1,9 +1,9 @@
 package com.file2chart.api.v1;
 
 import com.file2chart.model.dto.output.TableOutput;
-import com.file2chart.service.DataCompressionService;
-import com.file2chart.service.FileValidator;
 import com.file2chart.service.TableService;
+import com.file2chart.service.compression.DataCompressionService;
+import com.file2chart.service.files.FileValidator;
 import com.file2chart.service.utils.CryptoService;
 import com.file2chart.service.utils.JsonConverter;
 import lombok.AllArgsConstructor;

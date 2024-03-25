@@ -2,6 +2,7 @@ package com.file2chart.service;
 
 import com.file2chart.model.dto.output.ChartOutput;
 import com.file2chart.model.dto.output.TableOutput;
+import com.file2chart.service.compression.DataCompressionService;
 import com.file2chart.service.utils.CryptoService;
 import com.file2chart.service.utils.JsonConverter;
 import lombok.AllArgsConstructor;

@@ -8,7 +8,7 @@
 
         <script th:inline="javascript">
             $(document).ready(function() {
-                const ctx = document.getElementById('myChart');
+                const ctx = document.getElementById('chart');
 
                 const chartData = /*[[${chartOutput.getMap}]]*/ {};
 
@@ -48,7 +48,7 @@
     </head>
     <body>
         <div>
-            <canvas id="myChart"></canvas>
+            <canvas id="chart"></canvas>
         </div>
     </body>
 </html>

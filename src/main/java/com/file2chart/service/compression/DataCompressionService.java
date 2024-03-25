@@ -1,4 +1,4 @@
-package com.file2chart.service;
+package com.file2chart.service.compression;
 
 import org.springframework.stereotype.Service;
 

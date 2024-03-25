@@ -1,8 +1,8 @@
 package com.file2chart.api.v2;
 
 import com.file2chart.model.dto.local.GenericModel;
-import com.file2chart.service.FileValidator;
 import com.file2chart.service.GenericModelService;
+import com.file2chart.service.files.FileValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
