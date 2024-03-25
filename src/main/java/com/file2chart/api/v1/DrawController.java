@@ -22,6 +22,11 @@ public class DrawController {
         return processDrawing(drawingService::drawTable, data, model, "table/index");
     }
 
+    @RequestMapping("/draw/map")
+    public String drawMap(@RequestParam String data, Model model) {
+        return processDrawing(drawingService::drawChart, data, model, "map/index");
+    }
+
     @RequestMapping("/draw/chart/bar")
     public String drawBarChart(@RequestParam String data, Model model) {
         return processDrawing(drawingService::drawChart, data, model, "chart/bar/index");
