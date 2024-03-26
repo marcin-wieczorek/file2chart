@@ -21,8 +21,8 @@ public class SecureRedirectService {
     private final DataCompressionService dataCompressionService;
 
     @SneakyThrows
-    public <R> String generateSecureRedirect(Function<MultipartFile, R> function, MultipartFile file, String redirect) {
-        R result = function.apply(file);
+    public <T, R> String generateSecureRedirect(Function<T, R> function, T input, String redirect) {
+        R result = function.apply(input);
         var json = jsonConverter.toJSON(result, false);
         var compressedJson = dataCompressionService.compress(json);
         var encryptedMessage = cryptoService.encrypt(compressedJson);
