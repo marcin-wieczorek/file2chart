@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public abstract class FileConverter {
 
@@ -24,6 +25,7 @@ public abstract class FileConverter {
 
         CsvParser csvParser = new CsvParser(settings);
         List<Record> records = csvParser.parseAllRecords(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+        FileValidator.validateRecords(records);
 
         List<String> headers = List.of(records.get(0).getMetaData().headers());
 
@@ -43,24 +45,25 @@ public abstract class FileConverter {
 
         CsvParser csvParser = new CsvParser(settings);
         List<Record> records = csvParser.parseAllRecords(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+        FileValidator.validateRecords(records);
 
-        Map<String, List<String>> resultMap = new HashMap<>();
+        Map<String, List<String>> resultMap = Collections.unmodifiableMap(
+                List.of(records.get(0).getMetaData().headers())
+                    .stream()
+                    .collect(Collectors.toMap(header -> header, header -> new ArrayList<>()))
+        );
 
-        // Przetwarzamy nagłówki i wypełniamy mapę wynikową
-        for (String header : records.get(0).getMetaData().headers()) {
-            resultMap.put(header, new ArrayList<>());
-        }
-
-        // Wypełniamy mapę wartościami z rekordów
-        for (Record record : records) {
+        records.forEach(record -> {
             String[] values = record.getValues();
-            List<String> headers = List.of(record.getMetaData().headers());
-            for (int i = 0; i < values.length; i++) {
-                String header = headers.get(i);
-                FileValidator.validateNumericValue(values[i]);
-                resultMap.get(header).add(values[i]);
-            }
-        }
+            List<String> headers = resultMap.keySet().stream().toList();
+
+            IntStream.range(0, values.length)
+                     .forEach(value -> {
+                         String header = headers.get(value);
+                         FileValidator.validateNumericValue(values[value]);
+                         resultMap.get(header).add(values[value]);
+                     });
+        });
 
         return new ChartModel(resultMap);
     }
