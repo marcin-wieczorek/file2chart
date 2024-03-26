@@ -3,11 +3,11 @@
     <head>
         <meta charset="UTF-8">
         <title>Line Chart | file2chart.com</title>
-        <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <script th:inline="javascript">
-            $(document).ready(function() {
+            /*<![CDATA[*/
+            window.onload = function() {
                 const ctx = document.getElementById('chart');
 
                 const chartData = /*[[${data.getMap}]]*/ {};
@@ -44,7 +44,8 @@
                 };
 
                 new Chart(ctx, chartConfig);
-            });
+            };
+            /*]]>*/
         </script>
     </head>
     <body>

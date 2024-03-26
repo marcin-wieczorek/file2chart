@@ -7,9 +7,11 @@
         <script src="https://cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
         <link href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css" rel="stylesheet">
         <script>
-            $(document).ready(function() {
+            /*<![CDATA[*/
+            window.onload = function() {
                 new DataTable('#table');
-            });
+            };
+            /*]]>*/
         </script>
     </head>
     <body>
