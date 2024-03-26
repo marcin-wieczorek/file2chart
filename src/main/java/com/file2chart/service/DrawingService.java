@@ -22,6 +22,10 @@ public class DrawingService {
         return drawObject(data, TableOutput.class);
     }
 
+    public TableOutput drawMap(String data) {
+        return drawObject(data, TableOutput.class);
+    }
+
     public ChartOutput drawChart(String data) {
         return drawObject(data, ChartOutput.class);
     }

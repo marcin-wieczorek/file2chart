@@ -27,7 +27,7 @@ public class DrawController {
     @RequestMapping("/draw/map")
     public String drawMap(@RequestParam String data, Model model) {
         model.addAttribute("googleMapsScript", googleMapsService.getScript());
-        return processDrawing(drawingService::drawChart, data, model, "map/index");
+        return processDrawing(drawingService::drawMap, data, model, "map/index");
     }
 
     @RequestMapping("/draw/chart/bar")
