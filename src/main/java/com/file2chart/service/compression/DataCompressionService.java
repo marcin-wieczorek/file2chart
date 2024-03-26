@@ -1,10 +1,10 @@
 package com.file2chart.service.compression;
 
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Base64;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -12,7 +12,8 @@ import java.util.zip.GZIPOutputStream;
 @Service
 public class DataCompressionService {
 
-    public String compress(String data) throws IOException {
+    @SneakyThrows
+    public String compress(String data) {
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
              GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteArrayOutputStream)) {
             gzipOutputStream.write(data.getBytes());
@@ -21,7 +22,8 @@ public class DataCompressionService {
         }
     }
 
-    public String decompress(String compressedData) throws IOException {
+    @SneakyThrows
+    public String decompress(String compressedData) {
         byte[] compressedBytes = Base64.getDecoder().decode(compressedData);
         try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(compressedBytes);
              ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

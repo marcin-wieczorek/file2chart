@@ -2,13 +2,14 @@ package com.file2chart.service.utils;
 
 import com.file2chart.model.enums.Algorithm;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.*;
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.InvalidKeyException;
 import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
 
 @Service
 @AllArgsConstructor
@@ -17,7 +18,7 @@ public class CryptoService {
     private final KeyPair keyPair;
     private final KeyGenerator keyGenerator;
 
-    public String encrypt(String data) throws Exception {
+    public String encrypt(String data) {
         // Generating AES key
         SecretKey secretKey = keyGenerator.generateKey();
 
@@ -34,7 +35,7 @@ public class CryptoService {
         return Base64Utils.encrypt(result);
     }
 
-    public String decrypt(String data) throws Exception {
+    public String decrypt(String data) {
         // Decoding encrypted data from Base64
         byte[] encryptedBytes = Base64Utils.decryptToBytes(data);
 
@@ -52,25 +53,29 @@ public class CryptoService {
         return new String(decryptedData);
     }
 
-    private byte[] encryptRSA(byte[] data) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    @SneakyThrows
+    private byte[] encryptRSA(byte[] data) {
         Cipher aesCipher = Cipher.getInstance(Algorithm.RSA.name());
         aesCipher.init(Cipher.ENCRYPT_MODE, keyPair.getPublic());
         return aesCipher.doFinal(data);
     }
 
-    private byte[] decryptRSA(byte[] data) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    @SneakyThrows
+    private byte[] decryptRSA(byte[] data) {
         Cipher aesCipher = Cipher.getInstance(Algorithm.RSA.name());
         aesCipher.init(Cipher.DECRYPT_MODE, keyPair.getPrivate());
         return aesCipher.doFinal(data);
     }
 
-    private byte[] encryptAES(byte[] data, SecretKey key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    @SneakyThrows
+    private byte[] encryptAES(byte[] data, SecretKey key) {
         Cipher aesCipher = Cipher.getInstance(Algorithm.AES.name());
         aesCipher.init(Cipher.ENCRYPT_MODE, key);
         return aesCipher.doFinal(data);
     }
 
-    private byte[] decryptAES(byte[] encryptedData, SecretKey key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    @SneakyThrows
+    private byte[] decryptAES(byte[] encryptedData, SecretKey key) {
         Cipher aesCipher = Cipher.getInstance(Algorithm.AES.name());
         aesCipher.init(Cipher.DECRYPT_MODE, key);
         return aesCipher.doFinal(encryptedData);

@@ -19,28 +19,18 @@ public class DrawingService {
     private final DataCompressionService dataCompressionService;
 
     public TableOutput drawTable(String data) {
-        try {
-            var decryptedMessage = cryptoService.decrypt(data);
-            var decompressedJson = dataCompressionService.decompress(decryptedMessage);
-            TableOutput tableOutput = jsonConverter.toObject(decompressedJson, TableOutput.class);
-
-            return tableOutput;
-        } catch (Exception e) {
-            log.error("Error occurs during drawing table");
-            return null;
-        }
+        return drawObject(data, TableOutput.class);
     }
 
     public ChartOutput drawChart(String data) {
-        try {
-            var decryptedMessage = cryptoService.decrypt(data);
-            var decompressedJson = dataCompressionService.decompress(decryptedMessage);
-            ChartOutput chartOutput = jsonConverter.toObject(decompressedJson, ChartOutput.class);
+        return drawObject(data, ChartOutput.class);
+    }
 
-            return chartOutput;
-        } catch (Exception e) {
-            log.error("Error occurs during drawing chart");
-            return null;
-        }
+    private <T> T drawObject(String data, Class<T> clazz) {
+        var decryptedMessage = cryptoService.decrypt(data);
+        var decompressedJson = dataCompressionService.decompress(decryptedMessage);
+        T object = jsonConverter.toObject(decompressedJson, clazz);
+
+        return object;
     }
 }
