@@ -2,8 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Maps</title>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAO6GYjHFy42ZkJN3cM0nxtNEBKrkjwrBA&callback=initMap" async defer></script>
+        <title>Map view | file2chart.com</title>
         <style>
             #map {
                 height: 100vh;
@@ -13,6 +12,17 @@
     </head>
     <body>
         <div id="map"></div>
+        <div id="mapScript" th:text="${googleMapsScript}" style="display: none;"></div>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            window.onload = function() {
+                const scriptContent = document.getElementById('mapScript').textContent;
+                const scriptElement = document.createElement('script');
+                scriptElement.text = scriptContent;
+                document.body.appendChild(scriptElement);
+            };
+            /*]]>*/
+        </script>
         <script>
             let map;
 

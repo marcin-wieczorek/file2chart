@@ -1,6 +1,7 @@
 package com.file2chart.api.v1;
 
 import com.file2chart.service.DrawingService;
+import com.file2chart.service.GoogleMapsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,7 @@ import java.util.function.Function;
 public class DrawController {
 
     private final DrawingService drawingService;
+    private final GoogleMapsService googleMapsService;
 
     @RequestMapping("/draw/table")
     public String drawTable(@RequestParam String data, Model model) {
@@ -24,6 +26,7 @@ public class DrawController {
 
     @RequestMapping("/draw/map")
     public String drawMap(@RequestParam String data, Model model) {
+        model.addAttribute("googleMapsScript", googleMapsService.getScript());
         return processDrawing(drawingService::drawChart, data, model, "map/index");
     }
 
