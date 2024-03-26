@@ -18,17 +18,16 @@ public abstract class FileConverter {
     @SneakyThrows
     public static CSVModel toCSV(InputStream inputStream, long limit) {
         CsvParserSettings settings = new CsvParserSettings();
+        settings.setHeaderExtractionEnabled(true);
         settings.setDelimiterDetectionEnabled(true);
         //settings.setNumberOfRecordsToRead(limit);
 
         CsvParser csvParser = new CsvParser(settings);
         List<Record> records = csvParser.parseAllRecords(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
-        List<String> headers = Arrays.stream(records.get(0).getValues())
-                                     .toList();
+        List<String> headers = List.of(records.get(0).getMetaData().headers());
 
         List<List<String>> cells = records.stream()
-                                  .skip(1)
                                   .map(Record::getValues)
                                   .map(Arrays::asList)
                                   .collect(Collectors.toList());
@@ -40,6 +39,7 @@ public abstract class FileConverter {
         CsvParserSettings settings = new CsvParserSettings();
         settings.setHeaderExtractionEnabled(true);
         settings.setDelimiterDetectionEnabled(true);
+        //settings.setNumberOfRecordsToRead(limit);
 
         CsvParser csvParser = new CsvParser(settings);
         List<Record> records = csvParser.parseAllRecords(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
