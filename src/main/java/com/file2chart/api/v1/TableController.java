@@ -4,6 +4,8 @@ import com.file2chart.service.TableService;
 import com.file2chart.service.files.FileValidator;
 import com.file2chart.service.utils.SecureRedirectService;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +23,12 @@ public class TableController {
     @PostMapping("/table/html")
     public String upload(@RequestParam("file") MultipartFile file) {
         FileValidator.validateFileFormat(file);
-        return secureRedirectService.generateSecureRedirect(tableService::generateTable, file, "/draw/table");
+        return secureRedirectService.generateSecureRedirect(tableService::generateTable, file, "/draw/table/html");
+    }
+
+    @PostMapping("/table/image")
+    public String uploadImage(@RequestParam("file") MultipartFile file) {
+        FileValidator.validateFileFormat(file);
+        return secureRedirectService.generateSecureRedirect(tableService::generateTable, file, "/draw/table/image");
     }
 }

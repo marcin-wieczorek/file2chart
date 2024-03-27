@@ -1,9 +1,12 @@
 package com.file2chart.api.v1;
 
 import com.file2chart.service.ChartService;
+import com.file2chart.service.ImageGeneratorService;
 import com.file2chart.service.files.FileValidator;
 import com.file2chart.service.utils.SecureRedirectService;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
