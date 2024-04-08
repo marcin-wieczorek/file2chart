@@ -1,7 +1,6 @@
 package com.file2chart.service;
 
 import com.file2chart.model.dto.output.ChartOutput;
-import com.file2chart.model.dto.output.TableOutput;
 import com.file2chart.service.compression.DataCompressionService;
 import com.file2chart.service.utils.CryptoService;
 import com.file2chart.service.utils.JsonConverter;
@@ -12,19 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class DrawingService {
+public class VisualizationService {
 
     private final JsonConverter jsonConverter;
     private final CryptoService cryptoService;
     private final DataCompressionService dataCompressionService;
-
-    public TableOutput drawTable(String data) {
-        return drawObject(data, TableOutput.class);
-    }
-
-    public TableOutput drawMap(String data) {
-        return drawObject(data, TableOutput.class);
-    }
 
     public ChartOutput drawChart(String data) {
         return drawObject(data, ChartOutput.class);

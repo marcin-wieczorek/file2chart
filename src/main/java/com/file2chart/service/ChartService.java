@@ -3,6 +3,7 @@ package com.file2chart.service;
 import com.file2chart.model.dto.local.ChartModel;
 import com.file2chart.model.dto.output.ChartOutput;
 import com.file2chart.service.files.FileConverter;
+import com.file2chart.service.utils.SecureDataProcessorService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -14,12 +15,22 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class ChartService {
 
+    private final SecureDataProcessorService secureDataProcessorService;
+
     @SneakyThrows
     public ChartOutput generateChart(MultipartFile file) {
         ChartModel chartModel = FileConverter.toChart(file.getInputStream(), 10l);
         return ChartOutput.builder()
                           .map(chartModel.getMap())
                           .build();
+    }
+
+    public String serializeMap(ChartOutput chart) {
+        return secureDataProcessorService.serialize(chart);
+    }
+
+    public ChartOutput deserializeMap(String data) {
+        return secureDataProcessorService.deserialize(data, ChartOutput.class);
     }
 
 }

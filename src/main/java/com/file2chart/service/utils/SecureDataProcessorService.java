@@ -8,24 +8,31 @@ import org.springframework.stereotype.Service;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.function.Function;
 
 @Slf4j
 @Service
 @AllArgsConstructor
-public class SecureRedirectService {
+public class SecureDataProcessorService {
 
     private final JsonConverter jsonConverter;
     private final CryptoService cryptoService;
     private final DataCompressionService dataCompressionService;
 
     @SneakyThrows
-    public <T, R> String generateSecureRedirect(Function<T, R> function, T input, String redirect) {
-        R result = function.apply(input);
-        var json = jsonConverter.toJSON(result, false);
+    public <T> String serialize(T input) {
+        var json = jsonConverter.toJSON(input, false);
         var compressedJson = dataCompressionService.compress(json);
         var encryptedMessage = cryptoService.encrypt(compressedJson);
-        var encryptedMessageParam = URLEncoder.encode(encryptedMessage, StandardCharsets.UTF_8.toString());
-        return "redirect:" + redirect + "?data=" + encryptedMessageParam;
+
+        return URLEncoder.encode(encryptedMessage, StandardCharsets.UTF_8.toString());
+    }
+
+    @SneakyThrows
+    public <T> T deserialize(String input, Class<T> clazz) {
+        var decryptedMessage = cryptoService.decrypt(input);
+        var decompressedJson = dataCompressionService.decompress(decryptedMessage);
+        T object = jsonConverter.toObject(decompressedJson, clazz);
+
+        return object;
     }
 }

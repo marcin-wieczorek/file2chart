@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
@@ -27,9 +28,10 @@ public class ImageGeneratorService {
     private final SpringTemplateEngine templateEngine;
 
     @SneakyThrows
-    public InputStreamResource generateImage(Object data, String templateName) {
+    public InputStreamResource generateImage(Model model, String templateName) {
         Context context = new Context();
-        context.setVariable("data", data);
+
+        model.asMap().forEach((key, value) -> context.setVariable(key, value));
 
         String htmlContent = templateEngine.process(templateName, context);
 
