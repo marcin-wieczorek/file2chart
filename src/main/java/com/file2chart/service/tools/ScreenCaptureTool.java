@@ -1,4 +1,4 @@
-package com.file2chart.service;
+package com.file2chart.service.tools;
 
 import com.github.kklisura.cdt.launch.ChromeLauncher;
 import com.github.kklisura.cdt.protocol.commands.Emulation;
@@ -23,12 +23,12 @@ import java.util.Base64;
 
 @Service
 @AllArgsConstructor
-public class ImageGeneratorService {
+public class ScreenCaptureTool {
 
     private final SpringTemplateEngine templateEngine;
 
     @SneakyThrows
-    public InputStreamResource generateImage(Model model, String templateName) {
+    public InputStreamResource captureScreen(Model model, String templateName) {
         Context context = new Context();
 
         model.asMap().forEach((key, value) -> context.setVariable(key, value));

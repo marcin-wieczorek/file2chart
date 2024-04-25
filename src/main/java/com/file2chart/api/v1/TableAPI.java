@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface TableAPI {
-    @PostMapping("/table/data")
-    ResponseEntity<VisualizationData> generateTableData(@RequestParam("file") MultipartFile file, VisualizationType type);
+    @PostMapping("/table/hash")
+    ResponseEntity<VisualizationData> generateTableHash(@RequestParam MultipartFile file,
+                                                        @RequestParam VisualizationType type);
 
     @GetMapping("/table/visualization/html")
-    String generateHtmlVisualization(@RequestParam String data, Model model);
+    String generateHtmlVisualization(@RequestParam String hash, Model model);
 
     @GetMapping("/table/visualization/image")
-    ResponseEntity<InputStreamResource> generateImageVisualization(@RequestParam String data, Model model);
+    ResponseEntity<InputStreamResource> generateImageVisualization(@RequestParam String hash, Model model);
 }

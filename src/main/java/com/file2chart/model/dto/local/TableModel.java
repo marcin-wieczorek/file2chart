@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CSVModel {
+public class TableModel {
     private List<String> headers;
     private List<List<String>> cells;
 }

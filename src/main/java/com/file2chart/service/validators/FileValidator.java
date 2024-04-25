@@ -1,10 +1,10 @@
-package com.file2chart.service.files;
+package com.file2chart.service.validators;
 
 import com.file2chart.model.enums.FileFormat;
 import com.file2chart.service.utils.FileUtils;
-import com.univocity.parsers.common.record.Record;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
@@ -30,20 +30,17 @@ public class FileValidator {
         }
     }
 
-    public static void validateRecords(List<Record> records) {
-        if (records.size() == 0) {
-            log.error("No records found.");
-            throw new RuntimeException("No records found.");
-        }
 
-        if (records.get(0).getMetaData() == null) {
-            log.error("Metadata is missing for at least one record.");
-            throw new RuntimeException("Metadata is missing for at least one record.");
-        }
 
-        if (records.get(0).getMetaData().headers() == null || records.get(0).getMetaData().headers().length == 0) {
-            log.error("No headers found in metadata for at least one record.");
-            throw new RuntimeException("No headers found in metadata for at least one record.");
+    public static void validateMapHeaders(List<String> headers) {
+        List<String> normalizedHeaders = headers.stream().map(String::toLowerCase).toList();
+
+        boolean hasLatitude = normalizedHeaders.stream().anyMatch(header -> isLatitudeHeader(header));
+        boolean hasLongitude = normalizedHeaders.stream().anyMatch(header -> isLongitudeHeader(header));
+
+        if (!hasLatitude || !hasLongitude) {
+            log.error("The headers list does not contain the required columns for latitude (x, lat, latitude) or longitude (y, long, longitude).");
+            throw new IllegalArgumentException("The headers list does not contain the required columns for latitude (x, lat, latitude) or longitude (y, long, longitude).");
         }
     }
 
@@ -56,15 +53,19 @@ public class FileValidator {
         }
     }
 
-    private static boolean isNumeric(String str) {
-        if (str == null || str.isEmpty()) {
-            return false;
-        }
-        for (char c : str.toCharArray()) {
-            if (!Character.isDigit(c)) {
-                return false;
-            }
-        }
-        return true;
+    public static boolean isCoordinateHeader(String header) {
+        return isLatitudeHeader(header) || isLongitudeHeader(header);
+    }
+
+    public static boolean isLatitudeHeader(String header) {
+        return header.contains("x") || header.contains("lat") || header.contains("latitude");
+    }
+
+    public static boolean isLongitudeHeader(String header) {
+        return header.contains("y") || header.contains("long") || header.contains("longitude");
+    }
+
+    public static boolean isNumeric(String str) {
+        return NumberUtils.isCreatable(str);
     }
 }

@@ -4,9 +4,8 @@ import com.file2chart.api.v1.MapAPI;
 import com.file2chart.model.dto.output.MapOutput;
 import com.file2chart.model.dto.output.VisualizationData;
 import com.file2chart.model.enums.VisualizationType;
-import com.file2chart.service.GoogleMapsService;
-import com.file2chart.service.MapService;
-import com.file2chart.service.files.FileValidator;
+import com.file2chart.service.GoogleMapsClient;
+import com.file2chart.service.visualization.MapService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -23,33 +22,31 @@ import org.springframework.web.multipart.MultipartFile;
 public class MapController implements MapAPI {
 
     private final MapService mapService;
-    private final GoogleMapsService googleMapsService;
+    private final GoogleMapsClient googleMapsClient;
 
     @Override
-    public ResponseEntity<VisualizationData> generateMapData(MultipartFile file, VisualizationType visualizationType) {
-        FileValidator.validateFileFormat(file);
-
+    public ResponseEntity<VisualizationData> generateMapHash(MultipartFile file, VisualizationType visualizationType) {
         MapOutput mapOutput = mapService.generateHtmlMapData(file);
         String serializedData = mapService.serializeMap(mapOutput);
 
         VisualizationData visualizationData = VisualizationData.builder()
                                                                .data(serializedData)
-                                                               .path("/map/" + visualizationType.getType() + "/visualization")
+                                                               .path("/map/visualization/" + visualizationType.getType())
                                                                .build();
 
         return ResponseEntity.ok().body(visualizationData);
     }
 
     @Override
-    public String generateHtmlVisualization(String data, Model model) {
-        model.addAttribute("data", mapService.deserializeMap(data));
-        model.addAttribute("googleMapsScript", googleMapsService.getScript());
+    public String generateHtmlVisualization(String hash, Model model) {
+        model.addAttribute("data", mapService.deserializeMap(hash));
+        model.addAttribute("googleMapsScript", googleMapsClient.getScript());
         return "map/index";
     }
 
     @Override
-    public ResponseEntity<InputStreamResource> generateImageVisualization(String data, Model model) {
-        InputStreamResource image = googleMapsService.getImage();
+    public ResponseEntity<InputStreamResource> generateImageVisualization(String hash, Model model) {
+        InputStreamResource image = googleMapsClient.getImage();
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "map_image" + "_" + System.currentTimeMillis() + ".png");

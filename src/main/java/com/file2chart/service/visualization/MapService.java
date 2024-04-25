@@ -1,9 +1,10 @@
-package com.file2chart.service;
+package com.file2chart.service.visualization;
 
-import com.file2chart.model.dto.local.CSVModel;
+import com.file2chart.model.dto.local.MapModel;
 import com.file2chart.model.dto.output.MapOutput;
-import com.file2chart.service.files.FileConverter;
-import com.file2chart.service.utils.SecureDataProcessorService;
+import com.file2chart.service.compression.SecureDataProcessorService;
+import com.file2chart.service.interpreter.FileInterpreter;
+import com.file2chart.service.interpreter.FileInterpreterLoader;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +16,16 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class MapService {
 
+    private final FileInterpreterLoader interpreterLoader;
     private final SecureDataProcessorService secureDataProcessorService;
 
     @SneakyThrows
     public MapOutput generateHtmlMapData(MultipartFile file) {
-        CSVModel csvModel = FileConverter.toCSV(file.getInputStream(), 10l);
+        FileInterpreter fileInterpreter = interpreterLoader.loadInterpreter(file);
+        MapModel mapModel = fileInterpreter.toMap(file);
         return MapOutput.builder()
-                          .build();
+                        .geoLocations(mapModel.getGeoLocations())
+                        .build();
     }
 
     public String serializeMap(MapOutput map) {

@@ -11,13 +11,13 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 @Service
-public class GoogleMapsService {
+public class GoogleMapsClient {
 
     private final RestTemplate restTemplate;
     private String script;
     private String image;
 
-    public GoogleMapsService(RestTemplate restTemplate) {
+    public GoogleMapsClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

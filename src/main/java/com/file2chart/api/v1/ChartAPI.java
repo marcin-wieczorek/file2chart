@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ChartAPI {
-    @PostMapping("/chart/data")
-    ResponseEntity<VisualizationData> generateChartData(@RequestParam MultipartFile file,
-                                                        @RequestParam VisualizationType visualizationType,
-                                                        @RequestParam ChartType chartType);
+    @PostMapping("/chart/hash")
+    ResponseEntity<VisualizationData> generateChartHash(@RequestParam("file") MultipartFile file,
+                                                        @RequestParam("visualizationType") VisualizationType visualizationType,
+                                                        @RequestParam("chartType") ChartType chartType);
 
-    @GetMapping("/chart/visualization/html")
-    String generateHtmlVisualization(@PathVariable String data, @PathVariable ChartType chartType, Model model);
+    @GetMapping("/chart/{chartType}/visualization/html")
+    String generateHtmlVisualization(@RequestParam String hash, @PathVariable ChartType chartType, Model model);
 
-    @GetMapping("/chart/visualization/image")
-    String generateImageVisualization(@PathVariable String data, @PathVariable ChartType chartType, Model model);
+    @GetMapping("/chart/{chartType}/visualization/image")
+    String generateImageVisualization(@RequestParam String hash, @PathVariable ChartType chartType, Model model);
 }

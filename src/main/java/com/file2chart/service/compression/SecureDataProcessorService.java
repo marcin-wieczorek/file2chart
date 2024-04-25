@@ -1,6 +1,7 @@
-package com.file2chart.service.utils;
+package com.file2chart.service.compression;
 
-import com.file2chart.service.compression.DataCompressionService;
+import com.file2chart.service.utils.CryptoService;
+import com.file2chart.service.utils.JsonConverter;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

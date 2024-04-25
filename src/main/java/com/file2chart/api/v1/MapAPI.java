@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface MapAPI {
-    @PostMapping("/map/html/data")
-    ResponseEntity<VisualizationData> generateMapData(@RequestParam("file") MultipartFile file, VisualizationType visualizationType);
+    @PostMapping("/map/hash")
+    ResponseEntity<VisualizationData> generateMapHash(@RequestParam MultipartFile file,
+                                                      @RequestParam VisualizationType visualizationType);
 
     @GetMapping("/map/visualization/html")
-    String generateHtmlVisualization(@RequestParam String data, Model model);
+    String generateHtmlVisualization(@RequestParam String hash, Model model);
 
     @GetMapping("/map/visualization/image")
-    ResponseEntity<InputStreamResource> generateImageVisualization(@RequestParam String data, Model model);
+    ResponseEntity<InputStreamResource> generateImageVisualization(@RequestParam String hash, Model model);
 }
