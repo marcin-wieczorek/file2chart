@@ -17,4 +17,13 @@ public enum ChartType {
     public String getType() {
         return type;
     }
+
+    public static ChartType getByType(String type) {
+        for (ChartType chartType : ChartType.values()) {
+            if (chartType.getType().equals(type)) {
+                return chartType;
+            }
+        }
+        return null;
+    }
 }

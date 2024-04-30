@@ -1,11 +1,13 @@
 package com.file2chart.service.interpreter;
 
+import com.file2chart.model.enums.FileFormat;
 import com.file2chart.service.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -17,8 +19,11 @@ public class FileInterpreterLoader {
 
     public FileInterpreter loadInterpreter(MultipartFile file) {
         return interpreters.stream()
-                           .filter(interpreter -> FileUtils.getFileExtension(file.getOriginalFilename())
-                                                           .equalsIgnoreCase(interpreter.getFileFormat().getFormat()))
+                           .filter(interpreter -> {
+                               String fileExtension = FileUtils.getFileExtension(file.getOriginalFilename());
+                               return Arrays.stream(FileFormat.values())
+                                            .anyMatch(format -> format.getFormat().equalsIgnoreCase(fileExtension));
+                           })
                            .findFirst()
                            .orElseThrow(() -> {
                                log.error("Interpreter not found for this file format. {'extension': '{}'}", FileUtils.getFileExtension(file.getOriginalFilename()));

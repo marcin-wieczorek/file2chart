@@ -7,6 +7,8 @@ import com.file2chart.model.enums.ChartType;
 import com.file2chart.model.enums.FileFormat;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface FileInterpreter {
 
     ChartModel toChart(MultipartFile file, ChartType chartType);
@@ -15,6 +17,6 @@ public interface FileInterpreter {
 
     TableModel toTable(MultipartFile file);
 
-    FileFormat getFileFormat();
+    List<FileFormat> getSupportedFileFormat();
 
 }
