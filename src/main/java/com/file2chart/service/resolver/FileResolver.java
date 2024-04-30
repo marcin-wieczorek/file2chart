@@ -11,4 +11,6 @@ public interface FileResolver<T> {
 
     List<List<String>> getRecords(T object);
 
+    List<String> getDescriptions(T object);
+
 }

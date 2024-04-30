@@ -23,21 +23,37 @@
             };
             /*]]>*/
         </script>
-        <script>
-            let map;
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+
+            const geoLocations = /*[[${data.getGeoLocations}]]*/ [];
 
             function initMap() {
-                map = new google.maps.Map(document.getElementById('map'), {
-                    center: {lat: 51.5074, lng: 0.1278},
-                    zoom: 10
+                const map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 4,
+                    mapId: "DEMO_MAP_ID"
                 });
 
-                const marker = new google.maps.Marker({
-                    position: {lat: 51.5074, lng: 0.1278},
-                    map: map,
-                    title: 'London'
+                const bounds = new google.maps.LatLngBounds();
+
+                geoLocations.forEach(location => {
+                    let lat = parseFloat(location.coordinate.latitude);
+                    let lng = parseFloat(location.coordinate.longitude);
+
+                    const position = new google.maps.LatLng(lat, lng);
+                    bounds.extend(position);
+
+                    const marker = new google.maps.marker.AdvancedMarkerElement({
+                        position: {lat: lat, lng: lng},
+                        map: map,
+                        title: location.description // Użyj opisu lokalizacji lub domyślnego komunikatu, jeśli opis nie istnieje
+                    });
+
                 });
+
+                map.fitBounds(bounds);
             }
+            /*]]>*/
         </script>
     </body>
 </html>

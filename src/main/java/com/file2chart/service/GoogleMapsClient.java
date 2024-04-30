@@ -23,7 +23,7 @@ public class GoogleMapsClient {
 
     @PostConstruct
     public void init() {
-        String scriptUrl = "https://maps.googleapis.com/maps/api/js?key=" + "AIzaSyAO6GYjHFy42ZkJN3cM0nxtNEBKrkjwrBA" + "&callback=initMap";
+        String scriptUrl = "https://maps.googleapis.com/maps/api/js?key=" + "AIzaSyAO6GYjHFy42ZkJN3cM0nxtNEBKrkjwrBA" + "&callback=initMap&libraries=marker";
         ResponseEntity<String> response = restTemplate.getForEntity(scriptUrl, String.class);
         this.script = response.getBody();
     }

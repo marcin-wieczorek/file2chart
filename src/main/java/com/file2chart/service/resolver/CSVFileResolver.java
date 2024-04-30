@@ -15,7 +15,10 @@ import org.thymeleaf.util.StringUtils;
 
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -32,7 +35,33 @@ public class CSVFileResolver implements FileResolver<List<Record>> {
         List<String> headers = getHeaders(object);
         List<List<String>> records = getRecords(object);
 
-        return transformToModel(headers, records);
+        LinkedHashMap<String, List<String>> datasets = headers.stream()
+                                                              .collect(Collectors.toMap(
+                                                                      header -> header,
+                                                                      header -> new ArrayList<>(),
+                                                                      (a, b) -> b,
+                                                                      LinkedHashMap::new));
+
+        List<String> description = new ArrayList<>();
+
+        for (List<String> record : records) {
+            for (int i = 0; i < record.size(); i++) {
+                String headerElement = headers.get(i);
+                String recordValueElement = record.get(i);
+
+                if (StringUtils.equals(headerElement, HEADER_DESCRIPTION)) {
+                    FileValidator.validateStringValue(recordValueElement);
+                    description.add(recordValueElement == null ? "" : recordValueElement);
+                } else {
+                    FileValidator.validateNumericValue(recordValueElement);
+                    datasets.get(headerElement)
+                            .add(recordValueElement == null ? "0" : recordValueElement);
+                }
+            }
+        }
+        datasets.remove(HEADER_DESCRIPTION);
+
+        return new ChartModel(datasets, description);
     }
 
     public TableModel resolveTableModel (MultipartFile file) {
@@ -58,23 +87,16 @@ public class CSVFileResolver implements FileResolver<List<Record>> {
         String latitudeHeader = findHeaderWithKeyword(headers, HEADERS_LATITUDE);
         String longitudeHeader = findHeaderWithKeyword(headers, HEADERS_LONGITUDE);
 
-        List<String> otherHeaders = headers.stream()
-                                           .filter(header -> !header.equalsIgnoreCase(latitudeHeader) && !header.equalsIgnoreCase(longitudeHeader))
-                                           .collect(Collectors.toList());
+        String description = headers.stream()
+                                    .filter(header -> header.equalsIgnoreCase(HEADER_DESCRIPTION))
+                                    .findFirst()
+                                    .orElse("");
 
         int latitudeIndex = headers.indexOf(latitudeHeader);
         int longitudeIndex = headers.indexOf(longitudeHeader);
 
         for (List<String> row : records) {
             Coordinate coordinate = new Coordinate(row.get(latitudeIndex), row.get(longitudeIndex));
-
-            StringBuilder descriptionBuilder = new StringBuilder();
-            for (String header : otherHeaders) {
-                int index = headers.indexOf(header);
-                descriptionBuilder.append(row.get(index)).append("; ");
-            }
-
-            String description = descriptionBuilder.toString();
             geoLocations.add(new GeoLocation(coordinate, description));
         }
 
@@ -119,6 +141,11 @@ public class CSVFileResolver implements FileResolver<List<Record>> {
                          .collect(Collectors.toList());
     }
 
+    @Override
+    public List<String> getDescriptions(List<Record> object) {
+        return List.of();
+    }
+
     public static void validateHeaders(List<Record> records) {
         if (records.size() == 0) {
             log.error("No records found.");
@@ -157,48 +184,6 @@ public class CSVFileResolver implements FileResolver<List<Record>> {
             log.error("Missing description column in the source data file. Please check if the file contains the required description column.");
             throw new RuntimeException("Missing description column in the source data file. Please check if the file contains the required description column.");
         }
-    }
-
-    private static void validateRecords(List<Record> records) {
-        int firstRecordLength = records.get(0).getValues().length;
-        boolean allRecordsSameLength = records.stream()
-                                              .skip(1)
-                                              .allMatch(l -> l.getValues().length == firstRecordLength);
-
-        if (!allRecordsSameLength) {
-            log.error("No same record values length for at least one record.");
-            throw new RuntimeException("No same record values length for at least one record.");
-        }
-    }
-
-    private static ChartModel transformToModel(List<String> headers, List<List<String>> records) {
-        LinkedHashMap<String, List<String>> datasets = headers.stream()
-                                                              .collect(Collectors.toMap(
-                                                                      header -> header,
-                                                                      header -> new ArrayList<>(),
-                                                                      (a, b) -> b,
-                                                                      LinkedHashMap::new));
-
-        List<String> description = new ArrayList<>();
-
-        for (List<String> record : records) {
-            for (int i = 0; i < record.size(); i++) {
-                String headerElement = headers.get(i);
-                String recordValueElement = record.get(i);
-
-                if (StringUtils.equals(headerElement, HEADER_DESCRIPTION)) {
-                    FileValidator.validateStringValue(recordValueElement);
-                    description.add(recordValueElement == null ? "" : recordValueElement);
-                } else {
-                    FileValidator.validateNumericValue(recordValueElement);
-                    datasets.get(headerElement)
-                            .add(recordValueElement == null ? "0" : recordValueElement);
-                }
-            }
-        }
-        datasets.remove(HEADER_DESCRIPTION);
-
-        return new ChartModel(datasets, description);
     }
 
     private static String findHeaderWithKeyword(List<String> headers, List<String> keywords) {
