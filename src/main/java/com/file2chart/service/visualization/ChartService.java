@@ -26,6 +26,7 @@ public class ChartService {
         ChartModel chartModel = fileInterpreter.toChart(file, chartType);
         return ChartOutput.builder()
                           .map(chartModel.getMap())
+                          .description(chartModel.getDescription())
                           .build();
     }
 

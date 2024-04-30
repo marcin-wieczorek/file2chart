@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 @Component
 public class CSVFileResolver implements FileResolver<List<Record>> {
 
+    private static final String HEADER_DESCRIPTION = "description";
     private static final List<String> HEADERS_LATITUDE = Arrays.asList("x", "lat", "latitude");
     private static final List<String> HEADERS_LONGITUDE = Arrays.asList("y", "long", "longitude");
 
@@ -31,9 +32,7 @@ public class CSVFileResolver implements FileResolver<List<Record>> {
         List<String> headers = getHeaders(object);
         List<List<String>> records = getRecords(object);
 
-        Map<String, List<String>> datasets = transformToMap(headers, records);
-
-        return new ChartModel(datasets);
+        return transformToModel(headers, records);
     }
 
     public TableModel resolveTableModel (MultipartFile file) {
@@ -149,6 +148,15 @@ public class CSVFileResolver implements FileResolver<List<Record>> {
             log.error("One or more headers contains null value.", e);
             throw new RuntimeException("One or more headers contains null value.", e);
         }
+
+        boolean containsDescriptionHeader = List.of(records.get(0).getMetaData().headers())
+                                                .stream()
+                                                .anyMatch(header -> !StringUtils.equalsIgnoreCase(header, HEADER_DESCRIPTION));
+
+        if (!containsDescriptionHeader) {
+            log.error("Missing description column in the source data file. Please check if the file contains the required description column.");
+            throw new RuntimeException("Missing description column in the source data file. Please check if the file contains the required description column.");
+        }
     }
 
     private static void validateRecords(List<Record> records) {
@@ -163,7 +171,7 @@ public class CSVFileResolver implements FileResolver<List<Record>> {
         }
     }
 
-    private static Map<String, List<String>> transformToMap(List<String> headers, List<List<String>> records) {
+    private static ChartModel transformToModel(List<String> headers, List<List<String>> records) {
         LinkedHashMap<String, List<String>> datasets = headers.stream()
                                                               .collect(Collectors.toMap(
                                                                       header -> header,
@@ -171,17 +179,26 @@ public class CSVFileResolver implements FileResolver<List<Record>> {
                                                                       (a, b) -> b,
                                                                       LinkedHashMap::new));
 
+        List<String> description = new ArrayList<>();
+
         for (List<String> record : records) {
             for (int i = 0; i < record.size(); i++) {
                 String headerElement = headers.get(i);
                 String recordValueElement = record.get(i);
-                FileValidator.validateNumericValue(recordValueElement);
-                datasets.get(headerElement)
-                        .add(recordValueElement == null ? "0" : recordValueElement);
+
+                if (StringUtils.equals(headerElement, HEADER_DESCRIPTION)) {
+                    FileValidator.validateStringValue(recordValueElement);
+                    description.add(recordValueElement == null ? "" : recordValueElement);
+                } else {
+                    FileValidator.validateNumericValue(recordValueElement);
+                    datasets.get(headerElement)
+                            .add(recordValueElement == null ? "0" : recordValueElement);
+                }
             }
         }
+        datasets.remove(HEADER_DESCRIPTION);
 
-        return datasets;
+        return new ChartModel(datasets, description);
     }
 
     private static String findHeaderWithKeyword(List<String> headers, List<String> keywords) {

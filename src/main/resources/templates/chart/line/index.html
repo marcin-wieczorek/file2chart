@@ -11,8 +11,8 @@
                 const ctx = document.getElementById('chart');
 
                 const chartData = /*[[${data.getMap}]]*/ {};
+                const chartLabels = /*[[${data.getDescription}]]*/ [];
 
-                const labels = [];
                 const datasets = [];
 
                 for (const key in chartData) {
@@ -24,14 +24,13 @@
                             tension: 0.1
                         };
                         datasets.push(dataset);
-                        labels.push(key);
                     }
                 }
 
                 const chartConfig = {
                     type: 'line',
                     data: {
-                        labels: labels,
+                        labels: chartLabels,
                         datasets: datasets
                     },
                     options: {

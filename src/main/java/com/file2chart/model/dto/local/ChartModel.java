@@ -14,4 +14,5 @@ import java.util.Map;
 @AllArgsConstructor
 public class ChartModel {
     private Map<String, List<String>> map;
+    private List<String> description;
 }

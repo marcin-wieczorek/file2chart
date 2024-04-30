@@ -30,8 +30,6 @@ public class FileValidator {
         }
     }
 
-
-
     public static void validateMapHeaders(List<String> headers) {
         List<String> normalizedHeaders = headers.stream().map(String::toLowerCase).toList();
 
@@ -50,6 +48,15 @@ public class FileValidator {
         if (!isValid) {
             log.error("One or more values contain non-numeric characters.");
             throw new RuntimeException("One or more values contain non-numeric characters.");
+        }
+    }
+
+    public static void validateStringValue(String value) {
+        boolean isValid = !isNumeric(value);
+
+        if (!isValid) {
+            log.error("One or more values contain string-numeric characters.");
+            throw new RuntimeException("One or more values contain string-numeric characters.");
         }
     }
 
