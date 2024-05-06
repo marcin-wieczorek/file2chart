@@ -27,7 +27,7 @@ public class ChartController implements ChartAPI {
 
     @Override
     public ResponseEntity<VisualizationData> generateChartHash(MultipartFile file, VisualizationType visualizationType, ChartType chartType) {
-        ChartOutput chartOutput = chartService.generateChart(file, chartType);
+        ChartOutput chartOutput = chartService.generateChartData(file, chartType);
         String serializedData = chartService.serializeMap(chartOutput);
 
         VisualizationData visualizationData = VisualizationData.builder()
@@ -39,7 +39,7 @@ public class ChartController implements ChartAPI {
     }
 
     @Override
-    public String generateHtmlVisualization(String hash, ChartType chartType, Model model) {
+    public String generateEmbeddedVisualization(String hash, ChartType chartType, Model model) {
         model.addAttribute("data", chartService.deserializeMap(hash));
         return "chart/" + chartType.getType() + "/index";
     }

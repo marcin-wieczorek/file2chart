@@ -26,7 +26,7 @@ public class MapController implements MapAPI {
 
     @Override
     public ResponseEntity<VisualizationData> generateMapHash(MultipartFile file, VisualizationType visualizationType) {
-        MapOutput mapOutput = mapService.generateHtmlMapData(file);
+        MapOutput mapOutput = mapService.generateMapData(file);
         String serializedData = mapService.serializeMap(mapOutput);
 
         VisualizationData visualizationData = VisualizationData.builder()
@@ -38,7 +38,7 @@ public class MapController implements MapAPI {
     }
 
     @Override
-    public String generateHtmlVisualization(String hash, Model model) {
+    public String generateEmbeddedVisualization(String hash, Model model) {
         model.addAttribute("data", mapService.deserializeMap(hash));
         model.addAttribute("googleMapsScript", googleMapsClient.getScript());
         return "map/index";

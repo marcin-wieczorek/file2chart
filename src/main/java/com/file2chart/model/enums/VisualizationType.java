@@ -1,7 +1,7 @@
 package com.file2chart.model.enums;
 
 public enum VisualizationType {
-    HTML("html"),
+    EMBEDDED("embedded"),
     IMAGE("image");
 
     private final String type;

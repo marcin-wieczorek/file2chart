@@ -20,7 +20,7 @@ public class MapService {
     private final SecureDataProcessorService secureDataProcessorService;
 
     @SneakyThrows
-    public MapOutput generateHtmlMapData(MultipartFile file) {
+    public MapOutput generateMapData(MultipartFile file) {
         FileInterpreter fileInterpreter = interpreterLoader.loadInterpreter(file);
         MapModel mapModel = fileInterpreter.toMap(file);
         return MapOutput.builder()

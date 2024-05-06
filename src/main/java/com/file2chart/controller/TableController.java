@@ -26,7 +26,7 @@ public class TableController implements TableAPI {
 
     @Override
     public ResponseEntity<VisualizationData> generateTableHash(MultipartFile file, VisualizationType visualizationType) {
-        TableOutput tableOutput = tableService.generateHtmlTableData(file);
+        TableOutput tableOutput = tableService.generateTableData(file);
         String serializedData = tableService.serializeTable(tableOutput);
 
         VisualizationData visualizationData = VisualizationData.builder()
@@ -38,7 +38,7 @@ public class TableController implements TableAPI {
     }
 
     @Override
-    public String generateHtmlVisualization(String hash, Model model) {
+    public String generateEmbeddedVisualization(String hash, Model model) {
         model.addAttribute("data", tableService.deserializeTable(hash));
         return "table/index";
     }

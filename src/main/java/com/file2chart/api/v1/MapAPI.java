@@ -33,10 +33,10 @@ public interface MapAPI {
     @ApiResponse(responseCode = "401", content = @Content)
     @ApiResponse(responseCode = "403", content = @Content)
     @ApiResponse(responseCode = "404", content = @Content)
-    @GetMapping("/map/visualization/html")
-    String generateHtmlVisualization(@RequestParam String hash, Model model);
+    @GetMapping("/map/visualization/embedded")
+    String generateEmbeddedVisualization(@RequestParam String hash, Model model);
 
-    @Operation(description = "Generate visualisation as rendered Image (.png).")
+    @Operation(description = "Generate visualisation as Image (.png).")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "400", content = @Content)
     @ApiResponse(responseCode = "401", content = @Content)

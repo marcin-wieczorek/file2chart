@@ -36,10 +36,10 @@ public interface ChartAPI {
     @ApiResponse(responseCode = "401", content = @Content)
     @ApiResponse(responseCode = "403", content = @Content)
     @ApiResponse(responseCode = "404", content = @Content)
-    @GetMapping("/chart/{chartType}/visualization/html")
-    String generateHtmlVisualization(@RequestParam String hash, @PathVariable ChartType chartType, Model model);
+    @GetMapping("/chart/{chartType}/visualization/embedded")
+    String generateEmbeddedVisualization(@RequestParam String hash, @PathVariable ChartType chartType, Model model);
 
-    @Operation(description = "Generate visualisation as rendered Image (.png).")
+    @Operation(description = "Generate visualisation as Image (.png).")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "400", content = @Content)
     @ApiResponse(responseCode = "401", content = @Content)

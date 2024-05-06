@@ -20,7 +20,7 @@ public class TableService {
     private final SecureDataProcessorService secureDataProcessorService;
 
     @SneakyThrows
-    public TableOutput generateHtmlTableData(MultipartFile file) {
+    public TableOutput generateTableData(MultipartFile file) {
         FileInterpreter fileInterpreter = interpreterLoader.loadInterpreter(file);
         TableModel tableModel = fileInterpreter.toTable(file);
         return TableOutput.builder()

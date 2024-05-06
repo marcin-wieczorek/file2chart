@@ -21,7 +21,7 @@ public class ChartService {
     private final SecureDataProcessorService secureDataProcessorService;
 
     @SneakyThrows
-    public ChartOutput generateChart(MultipartFile file, ChartType chartType) {
+    public ChartOutput generateChartData(MultipartFile file, ChartType chartType) {
         FileInterpreter fileInterpreter = interpreterLoader.loadInterpreter(file);
         ChartModel chartModel = fileInterpreter.toChart(file, chartType);
         return ChartOutput.builder()
