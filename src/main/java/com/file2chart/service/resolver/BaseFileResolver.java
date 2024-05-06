@@ -41,23 +41,29 @@ public abstract class BaseFileResolver<T> implements FileResolver<T> {
                                                                       LinkedHashMap::new));
 
         List<String> description = new ArrayList<>();
+        String descriptionHeader = null;
 
         for (List<String> record : records) {
             for (int i = 0; i < record.size(); i++) {
                 String headerElement = headers.get(i);
                 String recordValueElement = record.get(i);
 
-                if (StringUtils.equals(headerElement, HEADER_DESCRIPTION)) {
+                if (StringUtils.equalsIgnoreCase(headerElement, HEADER_DESCRIPTION)) {
+                    descriptionHeader = headerElement;
                     CharValidator.validateStringValue(recordValueElement);
                     description.add(recordValueElement == null ? "" : recordValueElement);
                 } else {
+                    recordValueElement = recordValueElement.replace(',', '.'); // Zamiana przecinka na kropkę
                     CharValidator.validateNumericValue(recordValueElement);
                     datasets.get(headerElement)
                             .add(recordValueElement == null ? "0" : recordValueElement);
                 }
             }
         }
-        datasets.remove(HEADER_DESCRIPTION);
+
+        if (descriptionHeader != null) {
+            datasets.remove(descriptionHeader);
+        }
 
         return new ChartModel(datasets, description);
     }
