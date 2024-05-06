@@ -11,8 +11,11 @@
     <groupId>pl.marcinwieczorek</groupId>
     <artifactId>file2chart</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>file2chart</name>
-    <description>file2chart</description>
+    <packaging>jar</packaging>
+
+    <name>File2Chart Backend App</name>
+    <description>File2Chart Backend App - REST API based application</description>
+
     <properties>
         <java.version>17</java.version>
         <commons-csv.version>1.10.0</commons-csv.version>
