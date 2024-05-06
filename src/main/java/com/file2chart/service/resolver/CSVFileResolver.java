@@ -1,5 +1,6 @@
 package com.file2chart.service.resolver;
 
+import com.file2chart.exceptions.InvalidHeaderException;
 import com.univocity.parsers.common.record.Record;
 import com.univocity.parsers.common.record.RecordMetaData;
 import com.univocity.parsers.csv.CsvParser;
@@ -44,7 +45,7 @@ public class CSVFileResolver extends BaseFileResolver<List<Record>> {
                                   .map(List::of)
                                   .orElseThrow(() -> {
                                       log.error("One or more headers contains empty or null value.");
-                                      throw new RuntimeException("One or more headers contains empty or null value.");
+                                      throw new InvalidHeaderException("One or more headers contains empty or null value.");
                                   });
     }
 
@@ -69,17 +70,17 @@ public class CSVFileResolver extends BaseFileResolver<List<Record>> {
     public static void validateHeaders(List<Record> records) {
         if (records.size() == 0) {
             log.error("No records found.");
-            throw new RuntimeException("No records found.");
+            throw new InvalidHeaderException("No records found.");
         }
 
         if (records.get(0).getMetaData() == null) {
             log.error("Metadata is missing for at least one record.");
-            throw new RuntimeException("Metadata is missing for at least one record.");
+            throw new InvalidHeaderException("Metadata is missing for at least one record.");
         }
 
         if (records.get(0).getMetaData().headers() == null || records.get(0).getMetaData().headers().length == 0) {
             log.error("No headers found in metadata for at least one record.");
-            throw new RuntimeException("No headers found in metadata for at least one record.");
+            throw new InvalidHeaderException("No headers found in metadata for at least one record.");
         }
 
         try {
@@ -89,20 +90,20 @@ public class CSVFileResolver extends BaseFileResolver<List<Record>> {
                 .findFirst()
                 .ifPresent(element -> {
                     log.error("One or more headers contains empty value.");
-                    throw new RuntimeException("One or more headers contains empty value.");
+                    throw new InvalidHeaderException("One or more headers contains empty value.");
                 });
         } catch (Exception e) {
             log.error("One or more headers contains null value.", e);
-            throw new RuntimeException("One or more headers contains null value.", e);
+            throw new InvalidHeaderException("One or more headers contains null value.", e);
         }
 
         boolean containsDescriptionHeader = List.of(records.get(0).getMetaData().headers())
                                                 .stream()
-                                                .anyMatch(header -> !StringUtils.equalsIgnoreCase(header, BaseFileResolver.HEADER_DESCRIPTION));
+                                                .anyMatch(header -> StringUtils.equalsIgnoreCase(header, BaseFileResolver.HEADER_DESCRIPTION));
 
         if (!containsDescriptionHeader) {
             log.error("Missing description column in the source data file. Please check if the file contains the required description column.");
-            throw new RuntimeException("Missing description column in the source data file. Please check if the file contains the required description column.");
+            throw new InvalidHeaderException("Missing description column in the source data file. Please check if the file contains the required description column.");
         }
     }
 

@@ -1,5 +1,9 @@
 package com.file2chart.service.validators;
 
+import com.file2chart.exceptions.InvalidFileFormatException;
+import com.file2chart.exceptions.InvalidHeaderException;
+import com.file2chart.exceptions.InvalidNumericValueException;
+import com.file2chart.exceptions.InvalidStringValueException;
 import com.file2chart.model.enums.FileFormat;
 import com.file2chart.service.utils.FileUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +30,7 @@ public class FileValidator {
                                             .collect(Collectors.joining(", "));
 
             log.error("Invalid file format. { 'provided': '{}', 'supported': '{}' }", fileExtension, supportedFormats);
-            throw new RuntimeException("Invalid file format. Supported formats: " + supportedFormats);
+            throw new InvalidFileFormatException("Invalid file format. Supported formats: " + supportedFormats);
         }
     }
 
@@ -38,7 +42,7 @@ public class FileValidator {
 
         if (!hasLatitude || !hasLongitude) {
             log.error("The headers list does not contain the required columns for latitude (x, lat, latitude) or longitude (y, long, longitude).");
-            throw new IllegalArgumentException("The headers list does not contain the required columns for latitude (x, lat, latitude) or longitude (y, long, longitude).");
+            throw new InvalidHeaderException("The headers list does not contain the required columns for latitude (x, lat, latitude) or longitude (y, long, longitude).");
         }
     }
 
@@ -47,7 +51,7 @@ public class FileValidator {
 
         if (!isValid) {
             log.error("One or more values contain non-numeric characters.");
-            throw new RuntimeException("One or more values contain non-numeric characters.");
+            throw new InvalidNumericValueException("One or more values contain non-numeric characters.");
         }
     }
 
@@ -56,7 +60,7 @@ public class FileValidator {
 
         if (!isValid) {
             log.error("One or more values contain string-numeric characters.");
-            throw new RuntimeException("One or more values contain string-numeric characters.");
+            throw new InvalidStringValueException("One or more values contain string-numeric characters.");
         }
     }
 

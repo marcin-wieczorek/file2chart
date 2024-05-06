@@ -1,5 +1,6 @@
 package com.file2chart.service.resolver;
 
+import com.file2chart.exceptions.InvalidHeaderException;
 import com.file2chart.model.dto.local.*;
 import com.file2chart.model.enums.ChartType;
 import com.file2chart.service.validators.FileValidator;
@@ -127,7 +128,7 @@ public abstract class BaseFileResolver<T> implements FileResolver<T> {
             }
         }
         log.error("Keyword header not found.  { 'keywords': '{}' }", keywords);
-        throw new IllegalArgumentException("Keyword header not found.");
+        throw new InvalidHeaderException("Keyword header not found.");
     }
 
 }
