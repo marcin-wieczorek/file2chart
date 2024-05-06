@@ -46,7 +46,7 @@ public class MapController implements MapAPI {
 
     @Override
     public ResponseEntity<InputStreamResource> generateImageVisualization(String hash, Model model) {
-        InputStreamResource image = googleMapsClient.getImage();
+        InputStreamResource image = googleMapsClient.getImage(mapService.deserializeMap(hash));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "map_image" + "_" + System.currentTimeMillis() + ".png");

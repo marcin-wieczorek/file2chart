@@ -48,6 +48,8 @@ spring:
 # ===================================================================
 
 application:
+  google:
+    api-key: "AIzaSyAO6GYjHFy42ZkJN3cM0nxtNEBKrkjwrBA"
 
 
 

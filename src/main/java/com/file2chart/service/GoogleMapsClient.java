@@ -1,5 +1,9 @@
 package com.file2chart.service;
 
+import com.file2chart.config.GoogleMapsClientConfig;
+import com.file2chart.model.dto.local.Coordinate;
+import com.file2chart.model.dto.local.GeoLocation;
+import com.file2chart.model.dto.output.MapOutput;
 import jakarta.annotation.PostConstruct;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpMethod;
@@ -9,21 +13,28 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.List;
 
 @Service
 public class GoogleMapsClient {
 
     private final RestTemplate restTemplate;
+    private final GoogleMapsClientConfig config;
     private String script;
-    private String image;
 
-    public GoogleMapsClient(RestTemplate restTemplate) {
+    private static String API_BASE_URL = "https://maps.googleapis.com/maps/api";
+    private static String API_SCRIPT_URL = API_BASE_URL + "/js";
+    private static String API_STATIC_URL = API_BASE_URL + "/staticmap";
+    private static String API_KEY_PARAMETER = "?key=";
+
+    public GoogleMapsClient(RestTemplate restTemplate, GoogleMapsClientConfig config) {
         this.restTemplate = restTemplate;
+        this.config = config;
     }
 
     @PostConstruct
     public void init() {
-        String scriptUrl = "https://maps.googleapis.com/maps/api/js?key=" + "AIzaSyAO6GYjHFy42ZkJN3cM0nxtNEBKrkjwrBA" + "&callback=initMap&libraries=marker";
+        String scriptUrl = API_SCRIPT_URL + API_KEY_PARAMETER + config.getApiKey() + "&callback=initMap&libraries=marker";
         ResponseEntity<String> response = restTemplate.getForEntity(scriptUrl, String.class);
         this.script = response.getBody();
     }
@@ -32,14 +43,19 @@ public class GoogleMapsClient {
         return script;
     }
 
-    public InputStreamResource getImage() {
-        String center = "51.5074,0.1278";
-        int zoom = 10;
-        String size = "600x300";
-        String apiKey = "AIzaSyAO6GYjHFy42ZkJN3cM0nxtNEBKrkjwrBA";
+    public InputStreamResource getImage(MapOutput mapOutput) {
+        String size = "1920x1080";
+        StringBuilder markers = new StringBuilder();
 
-        String staticMapURL = "https://maps.googleapis.com/maps/api/staticmap?center=" + center + "&zoom=" + zoom +
-                "&size=" + size + "&format=png&key=" + apiKey;
+        List<GeoLocation> geoLocations = mapOutput.getGeoLocations();
+        for (GeoLocation geoLocation : geoLocations) {
+            Coordinate coordinate = geoLocation.getCoordinate();
+            double lat = Double.parseDouble(coordinate.getLatitude());
+            double lng = Double.parseDouble(coordinate.getLongitude());
+            markers.append(lat).append(",").append(lng).append("|");
+        }
+
+        String staticMapURL = String.format(API_STATIC_URL + API_KEY_PARAMETER + config.getApiKey() + "&size=%s&markers=%s", size, markers);
 
         ResponseEntity<byte[]> response = restTemplate.exchange(staticMapURL, HttpMethod.GET, null, byte[].class);
         InputStream inputStream = new ByteArrayInputStream(response.getBody());
