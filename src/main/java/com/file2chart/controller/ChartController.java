@@ -5,8 +5,12 @@ import com.file2chart.model.dto.output.ChartOutput;
 import com.file2chart.model.dto.output.VisualizationData;
 import com.file2chart.model.enums.ChartType;
 import com.file2chart.model.enums.VisualizationType;
+import com.file2chart.service.tools.ScreenCaptureTool;
 import com.file2chart.service.visualization.ChartService;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ChartController implements ChartAPI {
 
     private final ChartService chartService;
+    private final ScreenCaptureTool screenCaptureTool;
 
     @Override
     public ResponseEntity<VisualizationData> generateChartHash(MultipartFile file, VisualizationType visualizationType, ChartType chartType) {
@@ -40,9 +45,17 @@ public class ChartController implements ChartAPI {
     }
 
     @Override
-    public String generateImageVisualization(String hash, ChartType chartType, Model model) {
+    public ResponseEntity<InputStreamResource> generateImageVisualization(String hash, ChartType chartType, Model model) {
         model.addAttribute("data", chartService.deserializeMap(hash));
-        model.addAttribute("asImage", true);
-        return "chart/" + chartType.getType() + "/index";
+
+        InputStreamResource inputStreamResource = screenCaptureTool.captureScreen(model, "chart/" + chartType.getType() + "/index");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "chart_image" + "_" + System.currentTimeMillis() + ".png");
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+
+        return ResponseEntity.ok()
+                             .headers(headers)
+                             .body(inputStreamResource);
     }
 }

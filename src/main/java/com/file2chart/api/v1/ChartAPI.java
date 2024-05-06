@@ -3,6 +3,7 @@ package com.file2chart.api.v1;
 import com.file2chart.model.dto.output.VisualizationData;
 import com.file2chart.model.enums.ChartType;
 import com.file2chart.model.enums.VisualizationType;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,5 +22,5 @@ public interface ChartAPI {
     String generateHtmlVisualization(@RequestParam String hash, @PathVariable ChartType chartType, Model model);
 
     @GetMapping("/chart/{chartType}/visualization/image")
-    String generateImageVisualization(@RequestParam String hash, @PathVariable ChartType chartType, Model model);
+    ResponseEntity<InputStreamResource> generateImageVisualization(@RequestParam String hash, @PathVariable ChartType chartType, Model model);
 }
