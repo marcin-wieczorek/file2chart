@@ -3,7 +3,9 @@ package com.file2chart.service.resolver;
 import com.file2chart.exceptions.InvalidHeaderException;
 import com.file2chart.model.dto.local.*;
 import com.file2chart.model.enums.ChartType;
-import com.file2chart.service.validators.FileValidator;
+import com.file2chart.service.validators.CharValidator;
+import com.file2chart.service.validators.ChartValidator;
+import com.file2chart.service.validators.MapValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,9 +27,10 @@ public abstract class BaseFileResolver<T> implements FileResolver<T> {
 
     public ChartModel resolveChartModel (MultipartFile file, ChartType chartType) {
         T object = getObject(file);
-        validate(object);
 
         List<String> headers = getHeaders(object);
+        ChartValidator.validateHeaders(headers);
+
         List<List<String>> records = getRecords(object);
 
         LinkedHashMap<String, List<String>> datasets = headers.stream()
@@ -45,10 +48,10 @@ public abstract class BaseFileResolver<T> implements FileResolver<T> {
                 String recordValueElement = record.get(i);
 
                 if (StringUtils.equals(headerElement, HEADER_DESCRIPTION)) {
-                    FileValidator.validateStringValue(recordValueElement);
+                    CharValidator.validateStringValue(recordValueElement);
                     description.add(recordValueElement == null ? "" : recordValueElement);
                 } else {
-                    FileValidator.validateNumericValue(recordValueElement);
+                    CharValidator.validateNumericValue(recordValueElement);
                     datasets.get(headerElement)
                             .add(recordValueElement == null ? "0" : recordValueElement);
                 }
@@ -61,7 +64,6 @@ public abstract class BaseFileResolver<T> implements FileResolver<T> {
 
     public TableModel resolveTableModel (MultipartFile file) {
         T object = getObject(file);
-        validate(object);
 
         List<String> headers = getHeaders(object);
         List<List<String>> records = getRecords(object);
@@ -71,13 +73,13 @@ public abstract class BaseFileResolver<T> implements FileResolver<T> {
 
     public MapModel resolveMapModel (MultipartFile file) {
         T object = getObject(file);
-        validate(object);
 
         List<String> headers = getHeaders(object);
+        MapValidator.validateHeaders(headers);
+
         List<List<String>> records = getRecords(object);
 
-        FileValidator.validateMapHeaders(headers);
-
+        MapValidator.validateHeaders(headers);
 
         List<GeoLocation> geoLocations = new ArrayList<>();
 
@@ -93,7 +95,13 @@ public abstract class BaseFileResolver<T> implements FileResolver<T> {
         int longitudeIndex = headers.indexOf(longitudeHeader);
 
         for (List<String> row : records) {
-            Coordinate coordinate = new Coordinate(row.get(latitudeIndex), row.get(longitudeIndex));
+            String latitudeValue = row.get(latitudeIndex);
+            CharValidator.validateNumericValue(latitudeValue);
+
+            String longitudeValue = row.get(longitudeIndex);
+            CharValidator.validateNumericValue(longitudeValue);
+
+            Coordinate coordinate = new Coordinate(latitudeValue, longitudeValue);
             geoLocations.add(new GeoLocation(coordinate, description));
         }
 
@@ -116,9 +124,6 @@ public abstract class BaseFileResolver<T> implements FileResolver<T> {
         return List.of();
     }
 
-    public abstract void validate(T object);
-
-
     private static String findHeaderWithKeyword(List<String> headers, List<String> keywords) {
         for (String keyword : keywords) {
             for (String header : headers) {
@@ -127,8 +132,8 @@ public abstract class BaseFileResolver<T> implements FileResolver<T> {
                 }
             }
         }
-        log.error("Keyword header not found.  { 'keywords': '{}' }", keywords);
-        throw new InvalidHeaderException("Keyword header not found.");
+        log.error("Keyword header not found. { 'keywords': '{}' }", keywords);
+        throw new InvalidHeaderException("Keyword header not found. Keywords: " + keywords);
     }
 
 }
