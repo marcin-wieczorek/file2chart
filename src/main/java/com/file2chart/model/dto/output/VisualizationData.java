@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VisualizationData {
-    private String data;
+    private String hash;
     private String path;
 }

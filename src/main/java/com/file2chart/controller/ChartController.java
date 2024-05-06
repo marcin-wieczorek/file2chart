@@ -31,7 +31,7 @@ public class ChartController implements ChartAPI {
         String serializedData = chartService.serializeMap(chartOutput);
 
         VisualizationData visualizationData = VisualizationData.builder()
-                                                               .data(serializedData)
+                                                               .hash(serializedData)
                                                                .path("/chart/" + chartType.getType() + "/visualization/" + visualizationType.getType())
                                                                .build();
 

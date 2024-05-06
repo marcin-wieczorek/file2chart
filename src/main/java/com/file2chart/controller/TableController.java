@@ -30,7 +30,7 @@ public class TableController implements TableAPI {
         String serializedData = tableService.serializeTable(tableOutput);
 
         VisualizationData visualizationData = VisualizationData.builder()
-                                                               .data(serializedData)
+                                                               .hash(serializedData)
                                                                .path("/table/visualization/" + visualizationType.getType())
                                                                .build();
 

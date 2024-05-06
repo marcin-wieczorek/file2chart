@@ -30,7 +30,7 @@ public class MapController implements MapAPI {
         String serializedData = mapService.serializeMap(mapOutput);
 
         VisualizationData visualizationData = VisualizationData.builder()
-                                                               .data(serializedData)
+                                                               .hash(serializedData)
                                                                .path("/map/visualization/" + visualizationType.getType())
                                                                .build();
 
