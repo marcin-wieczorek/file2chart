@@ -41,6 +41,8 @@ public class ChartController implements ChartAPI {
 
     @Override
     public String generateImageVisualization(String hash, ChartType chartType, Model model) {
-        return "";
+        model.addAttribute("data", chartService.deserializeMap(hash));
+        model.addAttribute("asImage", true);
+        return "chart/" + chartType.getType() + "/index";
     }
 }

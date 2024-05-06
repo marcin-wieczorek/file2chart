@@ -12,6 +12,7 @@
 
                 const chartData = /*[[${data.getMap}]]*/ {};
                 const chartLabels = /*[[${data.getDescription}]]*/ [];
+                const asImage = /*[[${asImage}]]*/ false;
 
                 const datasets = [];
 
@@ -41,7 +42,14 @@
                     }
                 };
 
-                new Chart(ctx, chartConfig);
+                let chart = new Chart(ctx, chartConfig);
+
+                if (asImage) {
+                    var a = document.createElement('a');
+                    a.href = chart.toBase64Image();
+                    a.download = `chart_${Date.now()}.png`;
+                    a.click();
+                }
             };
             /*]]>*/
         </script>
