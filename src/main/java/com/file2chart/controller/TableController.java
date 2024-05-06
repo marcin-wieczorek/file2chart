@@ -26,7 +26,7 @@ public class TableController implements TableAPI {
 
     @Override
     public ResponseEntity<VisualizationData> generateTableHash(MultipartFile file, VisualizationType visualizationType) {
-        TableOutput tableOutput = tableService.generateTableData(file);
+        TableOutput tableOutput = tableService.generateTableOutput(file);
         String serializedData = tableService.serializeTable(tableOutput);
 
         VisualizationData visualizationData = VisualizationData.builder()

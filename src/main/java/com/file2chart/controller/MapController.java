@@ -26,7 +26,7 @@ public class MapController implements MapAPI {
 
     @Override
     public ResponseEntity<VisualizationData> generateMapHash(MultipartFile file, VisualizationType visualizationType) {
-        MapOutput mapOutput = mapService.generateMapData(file);
+        MapOutput mapOutput = mapService.generateMapOutput(file);
         String serializedData = mapService.serializeMap(mapOutput);
 
         VisualizationData visualizationData = VisualizationData.builder()

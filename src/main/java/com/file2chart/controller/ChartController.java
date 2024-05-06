@@ -27,7 +27,7 @@ public class ChartController implements ChartAPI {
 
     @Override
     public ResponseEntity<VisualizationData> generateChartHash(MultipartFile file, VisualizationType visualizationType, ChartType chartType) {
-        ChartOutput chartOutput = chartService.generateChartData(file, chartType);
+        ChartOutput chartOutput = chartService.generateChartOutput(file, chartType);
         String serializedData = chartService.serializeMap(chartOutput);
 
         VisualizationData visualizationData = VisualizationData.builder()
