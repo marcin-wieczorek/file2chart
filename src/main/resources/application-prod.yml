@@ -1,8 +1,7 @@
 # ===================================================================
-# Spring Boot configuration.
+# Spring Boot configuration for the "prod" profile.
 #
-# This configuration will be overridden by the Spring profile you use,
-# for example application-dev.yml if you use the "dev" profile.
+# This configuration overrides the application.yml file.
 # ===================================================================
 
 # ===================================================================
@@ -18,29 +17,6 @@ logging:
   level:
     ROOT: INFO
     com.file2chart: INFO
-
-springdoc:
-  api-docs:
-    enabled: true
-    path: /api-docs
-  swagger-ui:
-    enabled: true
-    disable-swagger-default-url: true
-    path: /docs
-  show-actuator: true
-
-spring:
-  profiles:
-    active: prod
-  cors:
-    allowed-origins:
-      - http://localhost:8080
-      - https://*.rapidapi.com
-  servlet:
-    multipart:
-      enabled: true
-      max-file-size: 200MB
-      max-request-size: 200MB
 
 # ===================================================================
 # Application specific properties.
