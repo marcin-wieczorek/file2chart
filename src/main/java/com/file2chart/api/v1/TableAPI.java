@@ -11,10 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Table")
+@RequestMapping("/v1")
 public interface TableAPI {
 
     @Operation(description = "Generate hash from your data source based on file, visualization type. It's needed to generate data visualization.")
