@@ -12,8 +12,13 @@
 
 logging:
   level:
-    ROOT: DEBUG
-    com.file2chart: DEBUG
+    ROOT: INFO
+    com.file2chart: INFO
+
+spring:
+  cors:
+    allowed-origins:
+      - http://localhost:8080
 
 # ===================================================================
 # Application specific properties.

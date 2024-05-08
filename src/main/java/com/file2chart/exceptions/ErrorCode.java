@@ -1,7 +1,14 @@
 package com.file2chart.exceptions;
 
 public enum ErrorCode {
-    ASD(""),
+    RECORD_VALIDATION_ERROR("An error occurred while validating records."),
+    HEADER_VALIDATION_ERROR("An error occurred while validating headers."),
+
+    FILE_FORMAT_ERROR("An error occurred while validating file format."),
+    FILE_INTERPRETER_ERROR("An error occurred while loading file interpreter."),
+
+    HASH_VALIDATION_ERROR("An error occurred while validating hash. Please check if the hash is correct and try again."),
+
     UNKNOWN("Unexpected error");
 
     private String message;

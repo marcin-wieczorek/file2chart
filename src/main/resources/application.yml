@@ -35,7 +35,10 @@ springdoc:
     enabled: true
     disable-swagger-default-url: true
     path: /docs
+    operations-sorter: alpha
+    tags-sorter: alpha
   show-actuator: true
+  writer-with-order-by-keys: true
 
 # ===================================================================
 # Application specific properties.

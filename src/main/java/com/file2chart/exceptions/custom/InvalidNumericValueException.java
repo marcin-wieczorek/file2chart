@@ -4,7 +4,7 @@ import com.file2chart.exceptions.ErrorCode;
 import com.file2chart.exceptions.http.HttpBadRequestException;
 
 public class InvalidNumericValueException extends HttpBadRequestException {
-    private static ErrorCode code = ErrorCode.ASD;
+    private static ErrorCode code = ErrorCode.RECORD_VALIDATION_ERROR;
 
     public InvalidNumericValueException() {
         super();

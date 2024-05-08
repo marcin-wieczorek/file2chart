@@ -1,9 +1,10 @@
 package com.file2chart.controller;
 
 import com.file2chart.api.v1.TableAPI;
+import com.file2chart.model.dto.input.EmbeddedTableVisualizationRequest;
+import com.file2chart.model.dto.input.ImageTableVisualizationRequest;
 import com.file2chart.model.dto.output.TableOutput;
-import com.file2chart.model.dto.output.VisualizationData;
-import com.file2chart.model.enums.VisualizationType;
+import com.file2chart.model.dto.output.VisualizationHashResponse;
 import com.file2chart.service.tools.ScreenCaptureTool;
 import com.file2chart.service.visualization.TableService;
 import lombok.AllArgsConstructor;
@@ -13,11 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-@CrossOrigin(origins = "*")
 @AllArgsConstructor
 public class TableController implements TableAPI {
 
@@ -25,27 +24,26 @@ public class TableController implements TableAPI {
     private final ScreenCaptureTool screenCaptureTool;
 
     @Override
-    public ResponseEntity<VisualizationData> generateTableHash(MultipartFile file, VisualizationType visualizationType) {
+    public ResponseEntity<VisualizationHashResponse> generateTableHash(MultipartFile file) {
         TableOutput tableOutput = tableService.generateTableOutput(file);
         String serializedData = tableService.serializeTable(tableOutput);
 
-        VisualizationData visualizationData = VisualizationData.builder()
-                                                               .hash(serializedData)
-                                                               .path("/table/visualization/" + visualizationType.getType())
-                                                               .build();
+        VisualizationHashResponse visualizationHashResponse = VisualizationHashResponse.builder()
+                                                                                       .hash(serializedData)
+                                                                                       .build();
 
-        return ResponseEntity.ok().body(visualizationData);
+        return ResponseEntity.ok().body(visualizationHashResponse);
     }
 
     @Override
-    public String generateEmbeddedVisualization(String hash, Model model) {
-        model.addAttribute("data", tableService.deserializeTable(hash));
+    public String generateEmbeddedVisualization(EmbeddedTableVisualizationRequest input, Model model) {
+        model.addAttribute("data", tableService.deserializeTable(input.getHash()));
         return "table/index";
     }
 
     @Override
-    public ResponseEntity<InputStreamResource> generateImageVisualization(String hash, Model model) {
-        model.addAttribute("data", tableService.deserializeTable(hash));
+    public ResponseEntity<InputStreamResource> generateImageVisualization(ImageTableVisualizationRequest input, Model model) {
+        model.addAttribute("data", tableService.deserializeTable(input.getHash()));
         InputStreamResource inputStreamResource = screenCaptureTool.captureScreen(model, "table/index");
 
         HttpHeaders headers = new HttpHeaders();

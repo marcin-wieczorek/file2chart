@@ -2,7 +2,6 @@ package com.file2chart.service.resolver;
 
 import com.file2chart.exceptions.custom.InvalidHeaderException;
 import com.file2chart.model.dto.local.*;
-import com.file2chart.model.enums.ChartType;
 import com.file2chart.service.validators.CharValidator;
 import com.file2chart.service.validators.ChartValidator;
 import com.file2chart.service.validators.MapValidator;
@@ -25,7 +24,7 @@ public abstract class BaseFileResolver<T> implements FileResolver<T> {
     public static final List<String> HEADERS_LATITUDE = Arrays.asList("x", "lat", "latitude");
     public static final List<String> HEADERS_LONGITUDE = Arrays.asList("y", "long", "longitude");
 
-    public ChartModel resolveChartModel (MultipartFile file, ChartType chartType) {
+    public ChartModel resolveChartModel (MultipartFile file) {
         T object = getObject(file);
 
         List<String> headers = getHeaders(object);

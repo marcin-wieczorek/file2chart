@@ -15,6 +15,12 @@ logging:
     ROOT: INFO
     com.file2chart: INFO
 
+spring:
+  cors:
+    allowed-origins:
+      - https://*.rapidapi.com
+      - https://file2chart.com
+
 # ===================================================================
 # Application specific properties.
 # Add your own application properties here.

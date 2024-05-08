@@ -1,9 +1,9 @@
 package com.file2chart.config.security;
 
+import com.file2chart.exceptions.custom.KeysNotReadableException;
 import com.file2chart.model.enums.Algorithm;
 import com.file2chart.service.utils.Base64Utils;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -31,7 +31,6 @@ public class SecurityConfig {
     private static final String PUBLIC_KEY_FILE_SUFFIX = "-----END PUBLIC KEY-----";
 
     @Bean
-    @SneakyThrows
     public KeyPair keyPair() {
         try (InputStream privateKeyInputStream = new ClassPathResource(PRIVATE_KEY_PATH).getInputStream();
              InputStream publicKeyInputStream = new ClassPathResource(PUBLIC_KEY_PATH).getInputStream()) {
@@ -52,6 +51,8 @@ public class SecurityConfig {
             PublicKey publicKey = keyFactory.generatePublic(new X509EncodedKeySpec(publicKeyPEMDecoded));
 
             return new KeyPair(publicKey, privateKey);
+        } catch (Exception e) {
+            throw new KeysNotReadableException("Error occurred while decrypting keys", e);
         }
     }
 

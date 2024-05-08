@@ -1,23 +1,26 @@
 package com.file2chart.exceptions.http;
 
+import com.file2chart.exceptions.ErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class HttpNotFoundException extends RuntimeException {
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public class HttpNotFoundException extends HttpException {
+    private static HttpStatus status = HttpStatus.BAD_REQUEST;
+
     public HttpNotFoundException() {
         super();
     }
 
-    public HttpNotFoundException(String message, Throwable cause) {
-        super(message, cause);
+    public HttpNotFoundException(ErrorCode code, String message, Throwable cause) {
+        super(status, code, message, cause);
     }
 
-    public HttpNotFoundException(String message) {
-        super(message);
+    public HttpNotFoundException(ErrorCode code, String message) {
+        super(status, code, message);
     }
 
-    public HttpNotFoundException(Throwable cause) {
-        super(cause);
+    public HttpNotFoundException(ErrorCode code, Throwable cause) {
+        super(status, code, cause);
     }
 }

@@ -1,9 +1,9 @@
 package com.file2chart.api.v1;
 
 import com.file2chart.exceptions.ApiError;
-import com.file2chart.model.dto.output.VisualizationData;
-import com.file2chart.model.enums.ChartType;
-import com.file2chart.model.enums.VisualizationType;
+import com.file2chart.model.dto.input.EmbeddedChartVisualizationRequest;
+import com.file2chart.model.dto.input.ImageChartVisualizationRequest;
+import com.file2chart.model.dto.output.VisualizationHashResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,7 +15,10 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Chart")
@@ -23,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ChartAPI {
 
     @Operation(description = "Generate hash from your data source based on file, visualization type and chart type.")
-    @ApiResponse(responseCode = "200", description = "Visualization data", content = @Content(schema = @Schema(implementation = VisualizationData.class)))
+    @ApiResponse(responseCode = "200", description = "Visualization data", content = @Content(schema = @Schema(implementation = VisualizationHashResponse.class)))
     @ApiResponse(
             responseCode = "400",
             description = "Bad request.",
@@ -44,10 +47,8 @@ public interface ChartAPI {
     @ApiResponse(responseCode = "404", description = "Resource not found.", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @ApiResponse(responseCode = "500", description = "The server encountered unexpected error.", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @PostMapping(value = "/chart/hash", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<VisualizationData> generateChartHash(
-            @Parameter(description = "File to upload, which will be the source for creating the chart. Only .csv is currently supported.") @RequestParam("file") MultipartFile file,
-            @Parameter(description = "Type of visualization.") @RequestParam("visualizationType") VisualizationType visualizationType,
-            @Parameter(description = "Chart type") @RequestParam("chartType") ChartType chartType
+    ResponseEntity<VisualizationHashResponse> generateChartHash(
+            @Parameter(description = "File to upload, which will be the source for creating the chart. Only .csv is currently supported.") @RequestParam MultipartFile file
     );
 
     @Operation(description = "Generate visualisation as rendered HTML page.")
@@ -56,9 +57,8 @@ public interface ChartAPI {
     @ApiResponse(responseCode = "401", content = @Content)
     @ApiResponse(responseCode = "403", content = @Content)
     @ApiResponse(responseCode = "404", content = @Content)
-    @GetMapping("/chart/{chartType}/visualization/embedded")
-    String generateEmbeddedVisualization(@RequestParam String hash,
-                                         @PathVariable ChartType chartType,
+    @PostMapping("/chart/visualization/embedded")
+    String generateEmbeddedVisualization(@RequestBody EmbeddedChartVisualizationRequest input,
                                          Model model
     );
 
@@ -68,9 +68,8 @@ public interface ChartAPI {
     @ApiResponse(responseCode = "401", content = @Content)
     @ApiResponse(responseCode = "403", content = @Content)
     @ApiResponse(responseCode = "404", content = @Content)
-    @GetMapping("/chart/{chartType}/visualization/image")
-    ResponseEntity<InputStreamResource> generateImageVisualization(@RequestParam String hash,
-                                                                   @PathVariable ChartType chartType,
+    @PostMapping("/chart/visualization/image")
+    ResponseEntity<InputStreamResource> generateImageVisualization(@RequestBody ImageChartVisualizationRequest input,
                                                                    Model model
     );
 }

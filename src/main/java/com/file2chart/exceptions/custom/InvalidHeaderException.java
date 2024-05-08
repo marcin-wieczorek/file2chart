@@ -4,7 +4,7 @@ import com.file2chart.exceptions.ErrorCode;
 import com.file2chart.exceptions.http.HttpBadRequestException;
 
 public class InvalidHeaderException extends HttpBadRequestException {
-    private static ErrorCode code = ErrorCode.ASD;
+    private static ErrorCode code = ErrorCode.HEADER_VALIDATION_ERROR;
 
     public InvalidHeaderException() {
         super();

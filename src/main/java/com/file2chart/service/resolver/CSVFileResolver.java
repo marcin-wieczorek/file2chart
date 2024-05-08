@@ -1,16 +1,17 @@
 package com.file2chart.service.resolver;
 
+import com.file2chart.exceptions.custom.FileParsingException;
 import com.file2chart.exceptions.custom.InvalidHeaderException;
 import com.file2chart.service.validators.ChartValidator;
 import com.univocity.parsers.common.record.Record;
 import com.univocity.parsers.common.record.RecordMetaData;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -22,16 +23,19 @@ import java.util.stream.Collectors;
 public class CSVFileResolver extends BaseFileResolver<List<Record>> {
 
     @Override
-    @SneakyThrows
     public List<Record> getObject(MultipartFile file) {
-        CsvParserSettings settings = new CsvParserSettings();
-        settings.setHeaderExtractionEnabled(true);
-        settings.setDelimiterDetectionEnabled(true);
-        //settings.setNumberOfRecordsToRead(limit);
+        try {
+            CsvParserSettings settings = new CsvParserSettings();
+            settings.setHeaderExtractionEnabled(true);
+            settings.setDelimiterDetectionEnabled(true);
+            //settings.setNumberOfRecordsToRead(limit);
 
-        CsvParser csvParser = new CsvParser(settings);
-        List<Record> records = csvParser.parseAllRecords(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
-        return records;
+            CsvParser csvParser = new CsvParser(settings);
+            List<Record> records = csvParser.parseAllRecords(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
+            return records;
+        } catch (IOException e) {
+            throw new FileParsingException("Error occurred while parsing CSV file", e);
+        }
     }
 
     @Override

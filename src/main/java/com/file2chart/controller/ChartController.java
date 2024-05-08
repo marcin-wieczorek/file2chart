@@ -1,10 +1,10 @@
 package com.file2chart.controller;
 
 import com.file2chart.api.v1.ChartAPI;
+import com.file2chart.model.dto.input.EmbeddedChartVisualizationRequest;
+import com.file2chart.model.dto.input.ImageChartVisualizationRequest;
 import com.file2chart.model.dto.output.ChartOutput;
-import com.file2chart.model.dto.output.VisualizationData;
-import com.file2chart.model.enums.ChartType;
-import com.file2chart.model.enums.VisualizationType;
+import com.file2chart.model.dto.output.VisualizationHashResponse;
 import com.file2chart.service.tools.ScreenCaptureTool;
 import com.file2chart.service.visualization.ChartService;
 import lombok.AllArgsConstructor;
@@ -14,11 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-@CrossOrigin(origins = "*")
 @AllArgsConstructor
 public class ChartController implements ChartAPI {
 
@@ -26,29 +24,29 @@ public class ChartController implements ChartAPI {
     private final ScreenCaptureTool screenCaptureTool;
 
     @Override
-    public ResponseEntity<VisualizationData> generateChartHash(MultipartFile file, VisualizationType visualizationType, ChartType chartType) {
-        ChartOutput chartOutput = chartService.generateChartOutput(file, chartType);
+    public ResponseEntity<VisualizationHashResponse> generateChartHash(MultipartFile file) {
+        ChartOutput chartOutput = chartService.generateChartOutput(file);
         String serializedData = chartService.serializeMap(chartOutput);
 
-        VisualizationData visualizationData = VisualizationData.builder()
-                                                               .hash(serializedData)
-                                                               .path("/chart/" + chartType.getType() + "/visualization/" + visualizationType.getType())
-                                                               .build();
+        VisualizationHashResponse visualizationHashResponse = VisualizationHashResponse.builder()
+                                                                                       .hash(serializedData)
+                                                                                       .build();
 
-        return ResponseEntity.ok().body(visualizationData);
+        return ResponseEntity.ok().body(visualizationHashResponse);
     }
 
     @Override
-    public String generateEmbeddedVisualization(String hash, ChartType chartType, Model model) {
-        model.addAttribute("data", chartService.deserializeMap(hash));
-        return "chart/" + chartType.getType() + "/index";
+    public String generateEmbeddedVisualization(EmbeddedChartVisualizationRequest input, Model model) {
+        model.addAttribute("data", chartService.deserializeMap(input.getHash()));
+        return "chart/" + input.getChartType().getType() + "/index";
     }
 
     @Override
-    public ResponseEntity<InputStreamResource> generateImageVisualization(String hash, ChartType chartType, Model model) {
-        model.addAttribute("data", chartService.deserializeMap(hash));
+    public ResponseEntity<InputStreamResource> generateImageVisualization(
+            ImageChartVisualizationRequest input, Model model) {
+        model.addAttribute("data", chartService.deserializeMap(input.getHash()));
 
-        InputStreamResource inputStreamResource = screenCaptureTool.captureScreen(model, "chart/" + chartType.getType() + "/index");
+        InputStreamResource inputStreamResource = screenCaptureTool.captureScreen(model, "chart/" + input.getChartType().getType() + "/index");
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "chart_image" + "_" + System.currentTimeMillis() + ".png");

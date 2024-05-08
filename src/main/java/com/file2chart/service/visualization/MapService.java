@@ -6,7 +6,6 @@ import com.file2chart.service.compression.SecureDataProcessorService;
 import com.file2chart.service.interpreter.FileInterpreter;
 import com.file2chart.service.interpreter.FileInterpreterLoader;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +18,6 @@ public class MapService {
     private final FileInterpreterLoader interpreterLoader;
     private final SecureDataProcessorService secureDataProcessorService;
 
-    @SneakyThrows
     public MapOutput generateMapOutput(MultipartFile file) {
         FileInterpreter fileInterpreter = interpreterLoader.loadInterpreter(file);
         MapModel mapModel = fileInterpreter.toMap(file);

@@ -11,10 +11,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class VisualizationData {
+public class VisualizationHashResponse {
     @NotNull
     private String hash;
-
-    @NotNull
-    private String path;
 }

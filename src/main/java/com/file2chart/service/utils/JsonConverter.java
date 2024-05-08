@@ -1,9 +1,10 @@
 package com.file2chart.service.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.file2chart.exceptions.custom.JsonConversionException;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,37 +12,43 @@ import org.springframework.stereotype.Service;
 public class JsonConverter {
     private final ObjectMapper objectMapper;
 
-    @SneakyThrows
     public <T> T toObject(JsonNode jsonNode, Class<T> clazz) {
-        return objectMapper.treeToValue(jsonNode, clazz);
+        try {
+            return objectMapper.treeToValue(jsonNode, clazz);
+        } catch (JsonProcessingException e) {
+            throw new JsonConversionException("Error converting JSON to class: " + clazz.getSimpleName(), e);
+        }
     }
 
-    @SneakyThrows
     public <T> T toObject(byte[] content, Class<T> clazz) {
         String s = new String(content);
         JsonNode json = toJSON(s);
         return toObject(json, clazz);
     }
 
-    @SneakyThrows
     public <T> T toObject(String content, Class<T> clazz) {
         JsonNode json = toJSON(content);
         return toObject(json, clazz);
     }
 
-    @SneakyThrows
     public String toJSON(Object object, boolean prettyPrint) {
-        return prettyPrint
-                ? objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object)
-                : objectMapper.writeValueAsString(object);
+        try {
+            return prettyPrint
+                    ? objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object)
+                    : objectMapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new JsonConversionException("Error converting object to JSON string", e);
+        }
     }
 
-    @SneakyThrows
     public JsonNode toJSON(String content) {
-        return objectMapper.readTree(content);
+        try {
+            return objectMapper.readTree(content);
+        } catch (JsonProcessingException e) {
+            throw new JsonConversionException("Error converting string to JSON", e);
+        }
     }
 
-    @SneakyThrows
     public JsonNode emptyJSON() {
         return objectMapper.createObjectNode();
     }
