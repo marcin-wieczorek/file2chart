@@ -1,19 +1,24 @@
-package com.file2chart.exceptions;
+package com.file2chart.exceptions.custom;
+
+import com.file2chart.exceptions.ErrorCode;
+import com.file2chart.exceptions.http.HttpBadRequestException;
 
 public class InvalidHeaderException extends HttpBadRequestException {
+    private static ErrorCode code = ErrorCode.ASD;
+
     public InvalidHeaderException() {
         super();
     }
 
     public InvalidHeaderException(String message, Throwable cause) {
-        super(message, cause);
+        super(code, message, cause);
     }
 
     public InvalidHeaderException(String message) {
-        super(message);
+        super(code, message);
     }
 
     public InvalidHeaderException(Throwable cause) {
-        super(cause);
+        super(code, cause);
     }
 }

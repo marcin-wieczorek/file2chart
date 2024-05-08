@@ -1,6 +1,6 @@
 package com.file2chart.service.resolver;
 
-import com.file2chart.exceptions.InvalidHeaderException;
+import com.file2chart.exceptions.custom.InvalidHeaderException;
 import com.file2chart.model.dto.local.*;
 import com.file2chart.model.enums.ChartType;
 import com.file2chart.service.validators.CharValidator;

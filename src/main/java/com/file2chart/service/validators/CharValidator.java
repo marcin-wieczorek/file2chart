@@ -1,7 +1,7 @@
 package com.file2chart.service.validators;
 
-import com.file2chart.exceptions.InvalidNumericValueException;
-import com.file2chart.exceptions.InvalidStringValueException;
+import com.file2chart.exceptions.custom.InvalidNumericValueException;
+import com.file2chart.exceptions.custom.InvalidStringValueException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 

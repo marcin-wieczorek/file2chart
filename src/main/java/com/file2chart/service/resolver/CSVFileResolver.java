@@ -1,6 +1,6 @@
 package com.file2chart.service.resolver;
 
-import com.file2chart.exceptions.InvalidHeaderException;
+import com.file2chart.exceptions.custom.InvalidHeaderException;
 import com.file2chart.service.validators.ChartValidator;
 import com.univocity.parsers.common.record.Record;
 import com.univocity.parsers.common.record.RecordMetaData;

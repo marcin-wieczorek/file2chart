@@ -1,6 +1,6 @@
 package com.file2chart.service.validators;
 
-import com.file2chart.exceptions.InvalidFileFormatException;
+import com.file2chart.exceptions.custom.InvalidFileFormatException;
 import com.file2chart.model.enums.FileFormat;
 import com.file2chart.service.utils.FileUtils;
 import lombok.extern.slf4j.Slf4j;

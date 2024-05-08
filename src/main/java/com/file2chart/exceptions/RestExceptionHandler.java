@@ -1,5 +1,8 @@
 package com.file2chart.exceptions;
 
+import com.file2chart.exceptions.http.HttpBadRequestException;
+import com.file2chart.exceptions.http.HttpException;
+import com.file2chart.exceptions.http.HttpNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,30 +14,30 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleInternalServerException(Exception ex) {
-        return buildResponseEntity(buildError(HttpStatus.INTERNAL_SERVER_ERROR, ex));
+        return buildResponseEntity(buildError(ex), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(HttpBadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public <T extends HttpBadRequestException> ResponseEntity<Object> handleBadRequestException(T ex) {
-        return buildResponseEntity(buildError(HttpStatus.BAD_REQUEST, "Bad request", ex));
+        return buildResponseEntity(buildError(ex), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(HttpNotFoundException.class)
     public <T extends HttpNotFoundException> ResponseEntity<Object> handleNotFoundExceptionException(T ex) {
-        return buildResponseEntity(buildError(HttpStatus.NOT_FOUND, "Not found", ex));
+        return buildResponseEntity(buildError(ex), HttpStatus.NOT_FOUND);
     }
 
-    private ApiError buildError(HttpStatus status, Exception ex) {
-        return new ApiError(status, ex);
+    private ApiError buildError(Exception ex) {
+        return new ApiError(ex);
     }
 
-    private ApiError buildError(HttpStatus status, String message, Exception ex) {
-        return new ApiError(status, message, ex);
+    private ApiError buildError(HttpException ex) {
+        return new ApiError(ex);
     }
 
-    private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
-        return new ResponseEntity<>(apiError, apiError.getStatus());
+    private ResponseEntity<Object> buildResponseEntity(ApiError apiError, HttpStatus httpStatus) {
+        return new ResponseEntity<>(apiError, httpStatus);
     }
 
 }

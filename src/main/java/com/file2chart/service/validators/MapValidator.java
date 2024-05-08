@@ -1,6 +1,6 @@
 package com.file2chart.service.validators;
 
-import com.file2chart.exceptions.InvalidHeaderException;
+import com.file2chart.exceptions.custom.InvalidHeaderException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;

@@ -22,14 +22,14 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/v1")
 public interface ChartAPI {
 
-    @Operation(description = "Generate hash from your data source based on file, visualization type and chart type. It's needed to generate data visualization.")
+    @Operation(description = "Generate hash from your data source based on file, visualization type and chart type.")
     @ApiResponse(responseCode = "200", description = "Visualization data", content = @Content(schema = @Schema(implementation = VisualizationData.class)))
     @ApiResponse(
             responseCode = "400",
             description = "Bad request.",
             content = @Content(schema = @Schema(implementation = ApiError.class),
                     examples = @ExampleObject(
-                            name = "BadRequestExample",
+                            name = "BAD_REQUEST",
                             value = """
                                     {
                                       "status": "BAD_REQUEST",
