@@ -9,7 +9,10 @@ public enum ErrorCode {
 
     HASH_VALIDATION_ERROR("An error occurred while validating hash. Please check if the hash is correct and try again."),
 
-    UNKNOWN("Unexpected error");
+    AUTHORIZATION_BAD_CREDENTIALS("Bad credentials."),
+    AUTHORIZATION_FORBIDDEN_ACCESS("No access for this resource."),
+
+    UNKNOWN("Unexpected error.");
 
     private String message;
 

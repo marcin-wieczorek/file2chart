@@ -17,10 +17,6 @@ server:
 spring:
   profiles:
     active: dev
-  cors:
-    allowed-origins:
-      - http://localhost:8080
-      - https://*.rapidapi.com
   servlet:
     multipart:
       enabled: true

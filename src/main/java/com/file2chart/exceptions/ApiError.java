@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.file2chart.exceptions.http.HttpException;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -36,6 +37,13 @@ public class ApiError {
         this.code = ex.getCode();
         this.message = ex.getCode().getMessage();
         this.debugMessage = ex.getLocalizedMessage();
+    }
+
+    ApiError(NoResourceFoundException ex) {
+        this();
+        this.status = HttpStatus.FORBIDDEN;
+        this.code = ErrorCode.AUTHORIZATION_FORBIDDEN_ACCESS;
+        this.message = ErrorCode.AUTHORIZATION_FORBIDDEN_ACCESS.getMessage();
     }
 
     ApiError(Exception ex) {
