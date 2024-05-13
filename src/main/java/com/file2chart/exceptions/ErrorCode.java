@@ -12,6 +12,8 @@ public enum ErrorCode {
     AUTHORIZATION_BAD_CREDENTIALS("Bad credentials."),
     AUTHORIZATION_FORBIDDEN_ACCESS("No access for this resource."),
 
+    RESOURCE_NOT_FOUND("Resource not found."),
+
     UNKNOWN("Unexpected error.");
 
     private String message;

@@ -27,9 +27,10 @@ spring:
 # ===================================================================
 
 application:
-  google:
-    api-key: ${GOOGLE_API_KEY}
-
+  api-keys:
+    google: ${GOOGLE_API_KEY}
+    rapid-api: ${RAPID-API_API_KEY}
+    rapid-api_host: ${RAPID-API_HOST}
 
 
 

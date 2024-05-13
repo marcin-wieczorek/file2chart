@@ -1,9 +1,9 @@
 package com.file2chart.exceptions;
 
 import com.file2chart.exceptions.http.HttpBadRequestException;
-import com.file2chart.exceptions.http.HttpException;
 import com.file2chart.exceptions.http.HttpNotFoundException;
 import com.file2chart.exceptions.http.HttpUnauthorizedException;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
-public class RestExceptionHandler {
+@AllArgsConstructor
+public class ApiExceptionHandler {
+
+    private final ApiErrorTranslator apiErrorTranslator;
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleInternalServerException(Exception ex) {
@@ -38,16 +41,8 @@ public class RestExceptionHandler {
         return buildResponseEntity(buildError(ex), HttpStatus.UNAUTHORIZED);
     }
 
-    public static ApiError buildError(Exception ex) {
-        return new ApiError(ex);
-    }
-
-    public static ApiError buildError(NoResourceFoundException ex) {
-        return new ApiError(ex);
-    }
-
-    public static ApiError buildError(HttpException ex) {
-        return new ApiError(ex);
+    public ApiError buildError(Exception ex) {
+        return apiErrorTranslator.getApiError(ex);
     }
 
     public static ResponseEntity<Object> buildResponseEntity(ApiError apiError, HttpStatus httpStatus) {

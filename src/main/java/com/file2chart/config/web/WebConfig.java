@@ -1,4 +1,4 @@
-package com.file2chart.config;
+package com.file2chart.config.web;
 
 import com.file2chart.config.converter.StringToChartTypeEnumConverter;
 import org.springframework.context.annotation.Configuration;

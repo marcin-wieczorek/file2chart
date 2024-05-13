@@ -1,6 +1,6 @@
 package com.file2chart.service;
 
-import com.file2chart.config.GoogleMapsClientConfig;
+import com.file2chart.config.rest.ApiKeysConfig;
 import com.file2chart.model.dto.local.Coordinate;
 import com.file2chart.model.dto.local.GeoLocation;
 import com.file2chart.model.dto.output.MapOutput;
@@ -19,7 +19,7 @@ import java.util.List;
 public class GoogleMapsClient {
 
     private final RestTemplate restTemplate;
-    private final GoogleMapsClientConfig config;
+    private final ApiKeysConfig apiKeysConfig;
     private String script;
 
     private static String API_BASE_URL = "https://maps.googleapis.com/maps/api";
@@ -27,14 +27,14 @@ public class GoogleMapsClient {
     private static String API_STATIC_URL = API_BASE_URL + "/staticmap";
     private static String API_KEY_PARAMETER = "?key=";
 
-    public GoogleMapsClient(RestTemplate restTemplate, GoogleMapsClientConfig config) {
+    public GoogleMapsClient(RestTemplate restTemplate, ApiKeysConfig apiKeysConfig) {
         this.restTemplate = restTemplate;
-        this.config = config;
+        this.apiKeysConfig = apiKeysConfig;
     }
 
     @PostConstruct
     public void init() {
-        String scriptUrl = API_SCRIPT_URL + API_KEY_PARAMETER + config.getApiKey() + "&callback=initMap&libraries=marker";
+        String scriptUrl = API_SCRIPT_URL + API_KEY_PARAMETER + apiKeysConfig.getGoogle() + "&callback=initMap&libraries=marker";
         ResponseEntity<String> response = restTemplate.getForEntity(scriptUrl, String.class);
         this.script = response.getBody();
     }
@@ -55,7 +55,7 @@ public class GoogleMapsClient {
             markers.append(lat).append(",").append(lng).append("|");
         }
 
-        String staticMapURL = String.format(API_STATIC_URL + API_KEY_PARAMETER + config.getApiKey() + "&size=%s&markers=%s", size, markers);
+        String staticMapURL = String.format(API_STATIC_URL + API_KEY_PARAMETER + apiKeysConfig.getGoogle() + "&size=%s&markers=%s", size, markers);
 
         ResponseEntity<byte[]> response = restTemplate.exchange(staticMapURL, HttpMethod.GET, null, byte[].class);
         InputStream inputStream = new ByteArrayInputStream(response.getBody());
