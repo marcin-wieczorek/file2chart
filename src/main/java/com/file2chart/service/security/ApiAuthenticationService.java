@@ -4,6 +4,7 @@ import com.file2chart.config.rest.ApiKeysConfig;
 import com.file2chart.exceptions.custom.BadCredentialsException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
