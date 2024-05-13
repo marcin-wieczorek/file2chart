@@ -5,6 +5,7 @@ import com.file2chart.model.dto.input.EmbeddedTableVisualizationRequest;
 import com.file2chart.model.dto.input.ImageTableVisualizationRequest;
 import com.file2chart.model.dto.output.VisualizationHashResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -160,7 +161,9 @@ public interface TableAPI {
                             )
                     }))
     @PostMapping(value = "/table/hash", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<VisualizationHashResponse> generateTableHash(@RequestParam MultipartFile file);
+    ResponseEntity<VisualizationHashResponse> generateTableHash(
+            @Parameter(description = "File to upload, which will serve as the source for creating the chart. <b>Only .csv format is currently supported.</b>") @RequestParam MultipartFile file
+    );
 
     @Operation(description = "Generate visualisation data based on provided hash as a embedded html page.")
     @ApiResponse(responseCode = "200", description = "Visualization data as a embedded html page.", content = @Content(schema = @Schema(implementation = String.class), mediaType = MediaType.TEXT_HTML_VALUE))
