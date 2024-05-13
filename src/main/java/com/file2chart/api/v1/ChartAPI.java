@@ -162,7 +162,7 @@ public interface ChartAPI {
                     }))
     @PostMapping(value = "/chart/hash", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<VisualizationHashResponse> generateChartHash(
-            @Parameter(description = "File to upload, which will be the source for creating the chart. Only .csv is currently supported.") @RequestParam MultipartFile file
+            @Parameter(description = "File to upload, which will serve as the source for creating the chart. <b>Only .csv format is currently supported.</b>") @RequestParam MultipartFile file
     );
 
     @Operation(description = "Generate visualisation data based on provided hash as a embedded html page.")
