@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -162,7 +163,8 @@ public interface MapAPI {
                     }))
     @PostMapping(value = "/map/hash", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<VisualizationHashResponse> generateMapHash(
-            @Parameter(description = "File to upload, which will serve as the source for creating the chart. <b>Only .csv format is currently supported.</b>") @RequestParam MultipartFile file
+            @Parameter(description = "File to upload, which will serve as the source for creating the chart. <b>Only .csv format is currently supported.</b>") @RequestParam MultipartFile file,
+            HttpServletRequest request
     );
 
     @Operation(description = "Generate visualisation data based on provided hash as a embedded html page.")
@@ -301,7 +303,7 @@ public interface MapAPI {
                             )
                     }))
     @PostMapping(value = "/map/visualization/embedded", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = {MediaType.TEXT_HTML_VALUE})
-    String generateEmbeddedVisualization(@RequestBody EmbeddedMapVisualizationRequest input, Model model);
+    String generateEmbeddedVisualization(@RequestBody EmbeddedMapVisualizationRequest input, Model model, HttpServletRequest request);
 
     @Operation(description = "Generate visualisation data based on provided hash as a image (.png)")
     @ApiResponse(responseCode = "200", description = "Visualization data as a image (.png) .", content = @Content(schema = @Schema(implementation = Byte.class), mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE))
@@ -439,5 +441,5 @@ public interface MapAPI {
                             )
                     }))
     @PostMapping(value = "/map/visualization/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    ResponseEntity<InputStreamResource> generateImageVisualization(@RequestBody ImageMapVisualizationRequest input, Model model);
+    ResponseEntity<InputStreamResource> generateImageVisualization(@RequestBody ImageMapVisualizationRequest input, Model model, HttpServletRequest request);
 }

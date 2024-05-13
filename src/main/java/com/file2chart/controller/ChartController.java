@@ -5,26 +5,31 @@ import com.file2chart.model.dto.input.EmbeddedChartVisualizationRequest;
 import com.file2chart.model.dto.input.ImageChartVisualizationRequest;
 import com.file2chart.model.dto.output.ChartOutput;
 import com.file2chart.model.dto.output.VisualizationHashResponse;
+import com.file2chart.service.security.SecurityService;
 import com.file2chart.service.tools.ScreenCaptureTool;
 import com.file2chart.service.visualization.ChartService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Controller
+@RestController
 @AllArgsConstructor
 public class ChartController implements ChartAPI {
 
     private final ChartService chartService;
     private final ScreenCaptureTool screenCaptureTool;
+    private final SecurityService securityService;
 
     @Override
-    public ResponseEntity<VisualizationHashResponse> generateChartHash(MultipartFile file) {
+    public ResponseEntity<VisualizationHashResponse> generateChartHash(MultipartFile file, HttpServletRequest request) {
+        securityService.validateHeaders(request);
+
         ChartOutput chartOutput = chartService.generateChartOutput(file);
         String serializedData = chartService.serializeMap(chartOutput);
 
@@ -36,14 +41,18 @@ public class ChartController implements ChartAPI {
     }
 
     @Override
-    public String generateEmbeddedVisualization(EmbeddedChartVisualizationRequest input, Model model) {
+    public String generateEmbeddedVisualization(EmbeddedChartVisualizationRequest input, Model model, HttpServletRequest request) {
+        securityService.validateHeaders(request);
+
         model.addAttribute("data", chartService.deserializeMap(input.getHash()));
         return "chart/" + input.getChartType().getType() + "/index";
     }
 
     @Override
     public ResponseEntity<InputStreamResource> generateImageVisualization(
-            ImageChartVisualizationRequest input, Model model) {
+            ImageChartVisualizationRequest input, Model model, HttpServletRequest request) {
+        securityService.validateHeaders(request);
+
         model.addAttribute("data", chartService.deserializeMap(input.getHash()));
 
         InputStreamResource inputStreamResource = screenCaptureTool.captureScreen(model, "chart/" + input.getChartType().getType() + "/index");

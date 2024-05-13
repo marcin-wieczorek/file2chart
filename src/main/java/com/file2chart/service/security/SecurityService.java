@@ -1,29 +1,29 @@
 package com.file2chart.service.security;
 
 import com.file2chart.config.rest.ApiKeysConfig;
+import com.file2chart.exceptions.ApiErrorTranslator;
 import com.file2chart.exceptions.custom.BadCredentialsException;
+import com.file2chart.service.utils.JsonConverter;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class ApiAuthenticationService {
+public class SecurityService {
 
     private final ApiKeysConfig apiKeysConfig;
+    private final JsonConverter converter;
+    private final ApiErrorTranslator apiErrorTranslator;
 
     private static final String RAPID_API_APIKEY_HEADER_NAME = "X-RapidAPI-Key";
     private static final String RAPID_API_HOST_HEADER_NAME = "X-RapidAPI-Host";
 
-    public Authentication getAuthentication(HttpServletRequest request) {
+    public void validateHeaders(HttpServletRequest request) {
         validateHeader(request, RAPID_API_APIKEY_HEADER_NAME, apiKeysConfig.getRapidApi());
-        validateHeader(request, RAPID_API_HOST_HEADER_NAME, apiKeysConfig.getRapidApiHost());
-
-        return new ApiKeyAuthentication();
+        //validateHeader(request, RAPID_API_HOST_HEADER_NAME, apiKeysConfig.getRapidApiHost());
     }
-    
+
     private boolean validateHeader(HttpServletRequest request, String headerName, String expectedHeaderValue) {
         String headerValue = request.getHeader(headerName);
         if (headerValue == null || !headerValue.equals(expectedHeaderValue)) {
