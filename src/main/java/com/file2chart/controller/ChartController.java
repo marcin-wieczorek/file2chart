@@ -1,11 +1,11 @@
 package com.file2chart.controller;
 
 import com.file2chart.api.v1.ChartAPI;
+import com.file2chart.aspect.SecuredRapidApiCall;
 import com.file2chart.model.dto.input.EmbeddedChartVisualizationRequest;
 import com.file2chart.model.dto.input.ImageChartVisualizationRequest;
 import com.file2chart.model.dto.output.ChartOutput;
 import com.file2chart.model.dto.output.VisualizationHashResponse;
-import com.file2chart.service.security.SecurityService;
 import com.file2chart.service.tools.ScreenCaptureTool;
 import com.file2chart.service.visualization.ChartService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,12 +24,10 @@ public class ChartController implements ChartAPI {
 
     private final ChartService chartService;
     private final ScreenCaptureTool screenCaptureTool;
-    private final SecurityService securityService;
 
     @Override
+    @SecuredRapidApiCall
     public ResponseEntity<VisualizationHashResponse> generateChartHash(MultipartFile file, HttpServletRequest request) {
-        securityService.validateHeaders(request);
-
         ChartOutput chartOutput = chartService.generateChartOutput(file);
         String serializedData = chartService.serializeMap(chartOutput);
 
@@ -42,8 +40,6 @@ public class ChartController implements ChartAPI {
 
     @Override
     public String generateEmbeddedVisualization(EmbeddedChartVisualizationRequest input, Model model, HttpServletRequest request) {
-        securityService.validateHeaders(request);
-
         model.addAttribute("data", chartService.deserializeMap(input.getHash()));
         return "chart/" + input.getChartType().getType() + "/index";
     }
@@ -51,8 +47,6 @@ public class ChartController implements ChartAPI {
     @Override
     public ResponseEntity<InputStreamResource> generateImageVisualization(
             ImageChartVisualizationRequest input, Model model, HttpServletRequest request) {
-        securityService.validateHeaders(request);
-
         model.addAttribute("data", chartService.deserializeMap(input.getHash()));
 
         InputStreamResource inputStreamResource = screenCaptureTool.captureScreen(model, "chart/" + input.getChartType().getType() + "/index");

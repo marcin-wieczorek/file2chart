@@ -6,7 +6,6 @@ import com.file2chart.model.dto.input.ImageMapVisualizationRequest;
 import com.file2chart.model.dto.output.MapOutput;
 import com.file2chart.model.dto.output.VisualizationHashResponse;
 import com.file2chart.service.GoogleMapsClient;
-import com.file2chart.service.security.SecurityService;
 import com.file2chart.service.visualization.MapService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -24,12 +23,9 @@ public class MapController implements MapAPI {
 
     private final MapService mapService;
     private final GoogleMapsClient googleMapsClient;
-    private final SecurityService securityService;
 
     @Override
     public ResponseEntity<VisualizationHashResponse> generateMapHash(MultipartFile file, HttpServletRequest request) {
-        securityService.validateHeaders(request);
-
         MapOutput mapOutput = mapService.generateMapOutput(file);
         String serializedData = mapService.serializeMap(mapOutput);
 
@@ -42,8 +38,6 @@ public class MapController implements MapAPI {
 
     @Override
     public String generateEmbeddedVisualization(EmbeddedMapVisualizationRequest input, Model model, HttpServletRequest request) {
-        securityService.validateHeaders(request);
-
         model.addAttribute("data", mapService.deserializeMap(input.getHash()));
         model.addAttribute("googleMapsScript", googleMapsClient.getScript());
         return "map/index";
@@ -51,8 +45,6 @@ public class MapController implements MapAPI {
 
     @Override
     public ResponseEntity<InputStreamResource> generateImageVisualization(ImageMapVisualizationRequest input, Model model, HttpServletRequest request) {
-        securityService.validateHeaders(request);
-
         InputStreamResource image = googleMapsClient.getImage(mapService.deserializeMap(input.getHash()));
 
         HttpHeaders headers = new HttpHeaders();

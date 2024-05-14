@@ -5,7 +5,6 @@ import com.file2chart.model.dto.input.EmbeddedTableVisualizationRequest;
 import com.file2chart.model.dto.input.ImageTableVisualizationRequest;
 import com.file2chart.model.dto.output.TableOutput;
 import com.file2chart.model.dto.output.VisualizationHashResponse;
-import com.file2chart.service.security.SecurityService;
 import com.file2chart.service.tools.ScreenCaptureTool;
 import com.file2chart.service.visualization.TableService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,12 +23,9 @@ public class TableController implements TableAPI {
 
     private final TableService tableService;
     private final ScreenCaptureTool screenCaptureTool;
-    private final SecurityService securityService;
 
     @Override
     public ResponseEntity<VisualizationHashResponse> generateTableHash(MultipartFile file, HttpServletRequest request) {
-        securityService.validateHeaders(request);
-
         TableOutput tableOutput = tableService.generateTableOutput(file);
         String serializedData = tableService.serializeTable(tableOutput);
 
@@ -42,16 +38,12 @@ public class TableController implements TableAPI {
 
     @Override
     public String generateEmbeddedVisualization(EmbeddedTableVisualizationRequest input, Model model, HttpServletRequest request) {
-        securityService.validateHeaders(request);
-
         model.addAttribute("data", tableService.deserializeTable(input.getHash()));
         return "table/index";
     }
 
     @Override
     public ResponseEntity<InputStreamResource> generateImageVisualization(ImageTableVisualizationRequest input, Model model, HttpServletRequest request) {
-        securityService.validateHeaders(request);
-
         model.addAttribute("data", tableService.deserializeTable(input.getHash()));
         InputStreamResource inputStreamResource = screenCaptureTool.captureScreen(model, "table/index");
 
