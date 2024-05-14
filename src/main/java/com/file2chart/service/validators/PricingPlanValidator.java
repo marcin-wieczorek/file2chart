@@ -15,7 +15,7 @@ public class PricingPlanValidator {
                 log.error("The current pricing plan ({}) allows up to {} records, but the number of records in the source exceeds this limit.", planPricing, planPricing.getRecordsLimit());
                 throw new UnsupportedPricingPlanException("The current pricing plan (" + planPricing + ") allows up to " + planPricing.getRecordsLimit() + " records, but the number of records in the source exceeds this limit.");
             }
-            if (records.getFirst().size() > planPricing.getDatasetsLimit()) {
+            if (records.get(0).size() > planPricing.getDatasetsLimit()) {
                 log.error("The current pricing plan ({}) allows up to {} records, but the number of datasets in the source exceeds this limit.", planPricing, planPricing.getDatasetsLimit());
                 throw new UnsupportedPricingPlanException("The current pricing plan (" + planPricing + ") allows up to " + planPricing.getDatasetsLimit() + " datasets, but the number of datasets in the source exceeds this limit.");
             }
