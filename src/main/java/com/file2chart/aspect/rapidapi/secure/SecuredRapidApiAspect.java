@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @AllArgsConstructor
-public class SecuredRapidApiCallAspect {
+public class SecuredRapidApiAspect {
 
     private final SecurityService securityService;
 
@@ -21,7 +21,18 @@ public class SecuredRapidApiCallAspect {
     public Object validateRapidApiCall(ProceedingJoinPoint joinPoint) throws Throwable {
         for (Object arg : joinPoint.getArgs()) {
             if (arg instanceof HttpServletRequest request) {
-                securityService.validateRapidApiHeaders(request);
+                securityService.validateRapidApiSecretHeaders(request);
+            }
+        }
+
+        return joinPoint.proceed();
+    }
+
+    @Around("@annotation(com.file2chart.aspect.rapidapi.secure.SecuredRapidApiPricingPlan)")
+    public Object validateRapidApiPricingPlan(ProceedingJoinPoint joinPoint) throws Throwable {
+        for (Object arg : joinPoint.getArgs()) {
+            if (arg instanceof HttpServletRequest request) {
+                securityService.validateRapidApiPricingPlanHeaders(request);
             }
         }
 

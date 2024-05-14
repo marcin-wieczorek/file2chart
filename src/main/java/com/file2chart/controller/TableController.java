@@ -2,6 +2,7 @@ package com.file2chart.controller;
 
 import com.file2chart.api.v1.TableAPI;
 import com.file2chart.aspect.rapidapi.secure.SecuredRapidApiCall;
+import com.file2chart.aspect.rapidapi.secure.SecuredRapidApiPricingPlan;
 import com.file2chart.model.dto.input.EmbeddedTableVisualizationRequest;
 import com.file2chart.model.dto.input.ImageTableVisualizationRequest;
 import com.file2chart.model.dto.output.TableOutput;
@@ -51,6 +52,7 @@ public class TableController implements TableAPI {
 
     @Override
     @SecuredRapidApiCall
+    @SecuredRapidApiPricingPlan
     public ResponseEntity<InputStreamResource> generateImageTableVisualization(ImageTableVisualizationRequest input, Model model, HttpServletRequest request) {
         model.addAttribute("data", tableService.deserializeTable(input.getHash()));
         InputStreamResource inputStreamResource = screenCaptureTool.captureScreen(model, "table/index");

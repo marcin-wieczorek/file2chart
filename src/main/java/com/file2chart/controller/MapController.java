@@ -2,6 +2,7 @@ package com.file2chart.controller;
 
 import com.file2chart.api.v1.MapAPI;
 import com.file2chart.aspect.rapidapi.secure.SecuredRapidApiCall;
+import com.file2chart.aspect.rapidapi.secure.SecuredRapidApiPricingPlan;
 import com.file2chart.model.dto.input.EmbeddedMapVisualizationRequest;
 import com.file2chart.model.dto.input.ImageMapVisualizationRequest;
 import com.file2chart.model.dto.output.MapOutput;
@@ -52,6 +53,7 @@ public class MapController implements MapAPI {
 
     @Override
     @SecuredRapidApiCall
+    @SecuredRapidApiPricingPlan
     public ResponseEntity<InputStreamResource> generateImageMapVisualization(ImageMapVisualizationRequest input, Model model, HttpServletRequest request) {
         InputStreamResource image = googleMapsClient.getImage(mapService.deserializeMap(input.getHash()));
 
