@@ -303,7 +303,7 @@ public interface TableAPI {
                             )
                     }))
     @PostMapping(value = "/table/visualization/embedded", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = {MediaType.TEXT_HTML_VALUE})
-    String generateEmbeddedVisualization(@RequestBody EmbeddedTableVisualizationRequest input, Model model, HttpServletRequest request);
+    String generateEmbeddedTableVisualization(@RequestBody EmbeddedTableVisualizationRequest input, Model model, HttpServletRequest request);
 
     @Operation(description = "Generate visualisation data based on provided hash as a image (.png)")
     @ApiResponse(responseCode = "200", description = "Visualization data as a image (.png) .", content = @Content(schema = @Schema(implementation = Byte.class), mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE))
@@ -441,5 +441,5 @@ public interface TableAPI {
                             )
                     }))
     @PostMapping(value = "/table/visualization/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    ResponseEntity<InputStreamResource> generateImageVisualization(@RequestBody ImageTableVisualizationRequest input, Model model, HttpServletRequest request);
+    ResponseEntity<InputStreamResource> generateImageTableVisualization(@RequestBody ImageTableVisualizationRequest input, Model model, HttpServletRequest request);
 }

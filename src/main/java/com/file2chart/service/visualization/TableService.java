@@ -2,6 +2,7 @@ package com.file2chart.service.visualization;
 
 import com.file2chart.model.dto.local.TableModel;
 import com.file2chart.model.dto.output.TableOutput;
+import com.file2chart.model.enums.PricingPlan;
 import com.file2chart.service.compression.SecureDataProcessorService;
 import com.file2chart.service.interpreter.FileInterpreter;
 import com.file2chart.service.interpreter.FileInterpreterLoader;
@@ -18,9 +19,9 @@ public class TableService {
     private final FileInterpreterLoader interpreterLoader;
     private final SecureDataProcessorService secureDataProcessorService;
 
-    public TableOutput generateTableOutput(MultipartFile file) {
+    public TableOutput generateTableOutput(MultipartFile file, PricingPlan pricingPlan) {
         FileInterpreter fileInterpreter = interpreterLoader.loadInterpreter(file);
-        TableModel tableModel = fileInterpreter.toTable(file);
+        TableModel tableModel = fileInterpreter.toTable(file, pricingPlan);
         return TableOutput.builder()
                           .headers(tableModel.getHeaders())
                           .cells(tableModel.getCells())

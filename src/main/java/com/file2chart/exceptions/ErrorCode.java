@@ -11,6 +11,7 @@ public enum ErrorCode {
 
     AUTHORIZATION_BAD_CREDENTIALS("Bad credentials."),
     AUTHORIZATION_FORBIDDEN_ACCESS("No access for this resource."),
+    UNSUPPORTED_PRICING_PLAN("Current pricing plan is not supported for this operation."),
 
     RESOURCE_NOT_FOUND("Resource not found."),
 

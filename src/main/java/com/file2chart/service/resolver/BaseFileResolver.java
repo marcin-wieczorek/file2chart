@@ -2,9 +2,11 @@ package com.file2chart.service.resolver;
 
 import com.file2chart.exceptions.custom.InvalidHeaderException;
 import com.file2chart.model.dto.local.*;
+import com.file2chart.model.enums.PricingPlan;
 import com.file2chart.service.validators.CharValidator;
 import com.file2chart.service.validators.ChartValidator;
 import com.file2chart.service.validators.MapValidator;
+import com.file2chart.service.validators.PricingPlanValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,13 +26,14 @@ public abstract class BaseFileResolver<T> implements FileResolver<T> {
     public static final List<String> HEADERS_LATITUDE = Arrays.asList("x", "lat", "latitude");
     public static final List<String> HEADERS_LONGITUDE = Arrays.asList("y", "long", "longitude");
 
-    public ChartModel resolveChartModel (MultipartFile file) {
+    public ChartModel resolveChartModel (MultipartFile file, PricingPlan pricingPlan) {
         T object = getObject(file);
 
         List<String> headers = getHeaders(object);
         ChartValidator.validateHeaders(headers);
 
         List<List<String>> records = getRecords(object);
+        PricingPlanValidator.validateLimits(records, pricingPlan);
 
         LinkedHashMap<String, List<String>> datasets = headers.stream()
                                                               .collect(Collectors.toMap(
@@ -67,24 +70,25 @@ public abstract class BaseFileResolver<T> implements FileResolver<T> {
         return new ChartModel(datasets, description);
     }
 
-    public TableModel resolveTableModel (MultipartFile file) {
+    public TableModel resolveTableModel (MultipartFile file, PricingPlan pricingPlan) {
         T object = getObject(file);
 
         List<String> headers = getHeaders(object);
         List<List<String>> records = getRecords(object);
+        PricingPlanValidator.validateLimits(records, pricingPlan);
+
 
         return new TableModel(headers, records);
     }
 
-    public MapModel resolveMapModel (MultipartFile file) {
+    public MapModel resolveMapModel (MultipartFile file, PricingPlan pricingPlan) {
         T object = getObject(file);
 
         List<String> headers = getHeaders(object);
         MapValidator.validateHeaders(headers);
 
         List<List<String>> records = getRecords(object);
-
-        MapValidator.validateHeaders(headers);
+        PricingPlanValidator.validateLimits(records, pricingPlan);
 
         List<GeoLocation> geoLocations = new ArrayList<>();
 

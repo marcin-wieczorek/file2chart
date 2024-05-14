@@ -6,6 +6,8 @@ import com.file2chart.model.dto.input.EmbeddedChartVisualizationRequest;
 import com.file2chart.model.dto.input.ImageChartVisualizationRequest;
 import com.file2chart.model.dto.output.ChartOutput;
 import com.file2chart.model.dto.output.VisualizationHashResponse;
+import com.file2chart.model.enums.PricingPlan;
+import com.file2chart.service.security.SecurityService;
 import com.file2chart.service.tools.ScreenCaptureTool;
 import com.file2chart.service.visualization.ChartService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,11 +26,13 @@ public class ChartController implements ChartAPI {
 
     private final ChartService chartService;
     private final ScreenCaptureTool screenCaptureTool;
+    private final SecurityService securityService;
 
     @Override
     @SecuredRapidApiCall
     public ResponseEntity<VisualizationHashResponse> generateChartHash(MultipartFile file, HttpServletRequest request) {
-        ChartOutput chartOutput = chartService.generateChartOutput(file);
+        PricingPlan pricingPlan = securityService.getPricingPlan(request);
+        ChartOutput chartOutput = chartService.generateChartOutput(file, pricingPlan);
         String serializedData = chartService.serializeMap(chartOutput);
 
         VisualizationHashResponse visualizationHashResponse = VisualizationHashResponse.builder()
@@ -39,13 +43,15 @@ public class ChartController implements ChartAPI {
     }
 
     @Override
-    public String generateEmbeddedVisualization(EmbeddedChartVisualizationRequest input, Model model, HttpServletRequest request) {
+    @SecuredRapidApiCall
+    public String generateEmbeddedChartVisualization(EmbeddedChartVisualizationRequest input, Model model, HttpServletRequest request) {
         model.addAttribute("data", chartService.deserializeMap(input.getHash()));
         return "chart/" + input.getChartType().getType() + "/index";
     }
 
     @Override
-    public ResponseEntity<InputStreamResource> generateImageVisualization(
+    @SecuredRapidApiCall
+    public ResponseEntity<InputStreamResource> generateImageChartVisualization(
             ImageChartVisualizationRequest input, Model model, HttpServletRequest request) {
         model.addAttribute("data", chartService.deserializeMap(input.getHash()));
 
