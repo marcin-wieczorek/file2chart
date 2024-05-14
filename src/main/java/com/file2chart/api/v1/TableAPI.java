@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-@Tag(name = "Table")
+@Tag(name = "Table", description = "Interactive (html) or static (image) table based on source file")
 @RequestMapping("/v1")
 public interface TableAPI {
 

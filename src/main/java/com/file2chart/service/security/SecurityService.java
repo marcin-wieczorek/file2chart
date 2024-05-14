@@ -16,12 +16,10 @@ public class SecurityService {
     private final JsonConverter converter;
     private final ApiErrorTranslator apiErrorTranslator;
 
-    private static final String RAPID_API_APIKEY_HEADER_NAME = "X-RapidAPI-Key";
-    private static final String RAPID_API_HOST_HEADER_NAME = "X-RapidAPI-Host";
+    private static final String RAPID_API_SECRET_HEADER_NAME = "X-RapidAPI-Proxy-Secret";
 
     public void validateHeaders(HttpServletRequest request) {
-        validateHeader(request, RAPID_API_APIKEY_HEADER_NAME, apiKeysConfig.getRapidApi());
-        //validateHeader(request, RAPID_API_HOST_HEADER_NAME, apiKeysConfig.getRapidApiHost());
+        validateHeader(request, RAPID_API_SECRET_HEADER_NAME, apiKeysConfig.getRapidApi());
     }
 
     private boolean validateHeader(HttpServletRequest request, String headerName, String expectedHeaderValue) {

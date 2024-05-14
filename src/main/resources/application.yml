@@ -33,14 +33,14 @@ springdoc:
     path: /docs
     operations-sorter: alpha
     tags-sorter: alpha
-  show-actuator: true
+  show-actuator: false
   writer-with-order-by-keys: true
 
-  management:
-    endpoints:
-      web:
-        exposure:
-          include=*: health
+management:
+  endpoints:
+    web:
+      exposure:
+        include=*: health
 
 # ===================================================================
 # Application specific properties.
