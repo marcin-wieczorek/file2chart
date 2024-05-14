@@ -1,4 +1,4 @@
-package com.file2chart.aspect;
+package com.file2chart.aspect.rapidapi.secure;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

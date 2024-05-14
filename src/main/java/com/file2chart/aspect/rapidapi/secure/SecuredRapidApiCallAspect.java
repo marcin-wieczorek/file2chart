@@ -1,4 +1,4 @@
-package com.file2chart.aspect;
+package com.file2chart.aspect.rapidapi.secure;
 
 import com.file2chart.service.security.SecurityService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +17,7 @@ public class SecuredRapidApiCallAspect {
 
     private final SecurityService securityService;
 
-    @Around("@annotation(SecuredRapidApiCall)")
+    @Around("@annotation(com.file2chart.aspect.rapidapi.secure.SecuredRapidApiCall)")
     public Object validateRapidApiCall(ProceedingJoinPoint joinPoint) throws Throwable {
         for (Object arg : joinPoint.getArgs()) {
             if (arg instanceof HttpServletRequest request) {
