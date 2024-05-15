@@ -4,12 +4,14 @@ import com.file2chart.exceptions.http.HttpBadRequestException;
 import com.file2chart.exceptions.http.HttpNotFoundException;
 import com.file2chart.exceptions.http.HttpUnauthorizedException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+@Slf4j
 @RestControllerAdvice
 @AllArgsConstructor
 public class ApiExceptionHandler {
@@ -22,7 +24,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public <T extends NoResourceFoundException> ResponseEntity<Object> handleBadRequestException(T ex) {
+    public <T extends NoResourceFoundException> ResponseEntity<Object> handleForbiddenException(T ex) {
         return buildResponseEntity(buildError(ex), HttpStatus.FORBIDDEN);
     }
 
@@ -37,12 +39,14 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(HttpUnauthorizedException.class)
-    public <T extends HttpUnauthorizedException> ResponseEntity<Object> handleNotFoundExceptionException(T ex) {
+    public <T extends HttpUnauthorizedException> ResponseEntity<Object> handleUnauthorizedExceptionException(T ex) {
         return buildResponseEntity(buildError(ex), HttpStatus.UNAUTHORIZED);
     }
 
     public ApiError buildError(Exception ex) {
-        return apiErrorTranslator.getApiError(ex);
+        ApiError apiError = apiErrorTranslator.getApiError(ex);
+        log.error("{'apiError': '{}', 'stackTrace': '{}'", apiError, ex.getStackTrace());
+        return apiError;
     }
 
     public static ResponseEntity<Object> buildResponseEntity(ApiError apiError, HttpStatus httpStatus) {

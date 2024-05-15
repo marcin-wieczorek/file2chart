@@ -326,7 +326,7 @@ public interface MapAPI {
                                             """
                             )
                     }))
-    @PostMapping(value = "/map/visualization/embedded", consumes = MediaType.APPLICATION_JSON_VALUE, produces = {MediaType.TEXT_HTML_VALUE})
+    @PostMapping(value = "/map/visualization/embedded", consumes = MediaType.APPLICATION_JSON_VALUE, produces = {MediaType.TEXT_HTML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     String generateEmbeddedMapVisualization(@RequestBody EmbeddedMapVisualizationRequest input, Model model, HttpServletRequest request);
 
     @Operation(description = "Generate visualisation data based on provided hash as a image (.png)")
@@ -476,6 +476,6 @@ public interface MapAPI {
                                             """
                             )
                     }))
-    @PostMapping(value = "/map/visualization/image", consumes = MediaType.APPLICATION_JSON_VALUE, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @PostMapping(value = "/map/visualization/image", consumes = MediaType.APPLICATION_JSON_VALUE, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<InputStreamResource> generateImageMapVisualization(@RequestBody ImageMapVisualizationRequest input, Model model, HttpServletRequest request);
 }
