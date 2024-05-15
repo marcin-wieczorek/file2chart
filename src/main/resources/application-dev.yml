@@ -29,7 +29,3 @@ application:
   api-keys:
     google: ""
     rapid-api: ""
-    rapid-api_host: ""
-
-
-
