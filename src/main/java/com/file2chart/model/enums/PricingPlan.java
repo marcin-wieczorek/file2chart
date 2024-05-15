@@ -4,19 +4,15 @@ import lombok.Getter;
 
 @Getter
 public enum PricingPlan {
-    BASIC(25, 2, false),
-    PRO(100, 8, false),
-    ULTRA(1000, 64, true),
-    MEGA(0, 0, true);
+    BASIC(25),
+    PRO(100),
+    ULTRA(1000),
+    MEGA(0);
 
     private int recordsLimit;
-    private int datasetsLimit;
-    private boolean convertToImage;
 
-    PricingPlan(int recordsLimit, int datasetsLimit, boolean convertToImage) {
+    PricingPlan(int recordsLimit) {
         this.recordsLimit = recordsLimit;
-        this.datasetsLimit = datasetsLimit;
-        this.convertToImage = convertToImage;
     }
 
 

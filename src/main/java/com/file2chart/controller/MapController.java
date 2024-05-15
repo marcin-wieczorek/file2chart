@@ -31,6 +31,7 @@ public class MapController implements MapAPI {
 
     @Override
     @SecuredRapidApiCall
+    @SecuredRapidApiPricingPlan(pricingPlans = {PricingPlan.BASIC, PricingPlan.MEGA, PricingPlan.PRO, PricingPlan.ULTRA})
     public ResponseEntity<VisualizationHashResponse> generateMapHash(MultipartFile file, HttpServletRequest request) {
         PricingPlan pricingPlan = securityService.getPricingPlan(request);
         MapOutput mapOutput = mapService.generateMapOutput(file, pricingPlan);
@@ -45,6 +46,7 @@ public class MapController implements MapAPI {
 
     @Override
     @SecuredRapidApiCall
+    @SecuredRapidApiPricingPlan(pricingPlans = {PricingPlan.BASIC, PricingPlan.MEGA, PricingPlan.PRO, PricingPlan.ULTRA})
     public String generateEmbeddedMapVisualization(EmbeddedMapVisualizationRequest input, Model model, HttpServletRequest request) {
         model.addAttribute("data", mapService.deserializeMap(input.getHash()));
         model.addAttribute("googleMapsScript", googleMapsClient.getScript());
@@ -53,7 +55,7 @@ public class MapController implements MapAPI {
 
     @Override
     @SecuredRapidApiCall
-    @SecuredRapidApiPricingPlan
+    @SecuredRapidApiPricingPlan(pricingPlans = {PricingPlan.PRO, PricingPlan.ULTRA})
     public ResponseEntity<InputStreamResource> generateImageMapVisualization(ImageMapVisualizationRequest input, Model model, HttpServletRequest request) {
         InputStreamResource image = googleMapsClient.getImage(mapService.deserializeMap(input.getHash()));
 

@@ -31,6 +31,7 @@ public class ChartController implements ChartAPI {
 
     @Override
     @SecuredRapidApiCall
+    @SecuredRapidApiPricingPlan(pricingPlans = {PricingPlan.BASIC, PricingPlan.MEGA, PricingPlan.PRO, PricingPlan.ULTRA})
     public ResponseEntity<VisualizationHashResponse> generateChartHash(MultipartFile file, HttpServletRequest request) {
         PricingPlan pricingPlan = securityService.getPricingPlan(request);
         ChartOutput chartOutput = chartService.generateChartOutput(file, pricingPlan);
@@ -45,6 +46,7 @@ public class ChartController implements ChartAPI {
 
     @Override
     @SecuredRapidApiCall
+    @SecuredRapidApiPricingPlan(pricingPlans = {PricingPlan.BASIC, PricingPlan.MEGA, PricingPlan.PRO, PricingPlan.ULTRA})
     public String generateEmbeddedChartVisualization(EmbeddedChartVisualizationRequest input, Model model, HttpServletRequest request) {
         model.addAttribute("data", chartService.deserializeMap(input.getHash()));
         return "chart/" + input.getChartType().getType() + "/index";
@@ -52,9 +54,8 @@ public class ChartController implements ChartAPI {
 
     @Override
     @SecuredRapidApiCall
-    @SecuredRapidApiPricingPlan
-    public ResponseEntity<InputStreamResource> generateImageChartVisualization(
-            ImageChartVisualizationRequest input, Model model, HttpServletRequest request) {
+    @SecuredRapidApiPricingPlan(pricingPlans = {PricingPlan.PRO, PricingPlan.ULTRA})
+    public ResponseEntity<InputStreamResource> generateImageChartVisualization(ImageChartVisualizationRequest input, Model model, HttpServletRequest request) {
         model.addAttribute("data", chartService.deserializeMap(input.getHash()));
 
         InputStreamResource inputStreamResource = screenCaptureTool.captureScreen(model, "chart/" + input.getChartType().getType() + "/index");

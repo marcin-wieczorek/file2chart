@@ -9,15 +9,11 @@ import java.util.List;
 @Slf4j
 public class PricingPlanValidator {
 
-    public static void validateLimits(List<List<String>> records, PricingPlan planPricing) {
-        if (!planPricing.equals(PricingPlan.ULTRA)) {
-            if (records.size() > planPricing.getRecordsLimit()) {
-                log.error("The current pricing plan ({}) allows up to {} records, but the number of records in the source exceeds this limit.", planPricing, planPricing.getRecordsLimit());
-                throw new UnsupportedPricingPlanException("The current pricing plan (" + planPricing + ") allows up to " + planPricing.getRecordsLimit() + " records, but the number of records in the source exceeds this limit.");
-            }
-            if (records.get(0).size() > planPricing.getDatasetsLimit()) {
-                log.error("The current pricing plan ({}) allows up to {} records, but the number of datasets in the source exceeds this limit.", planPricing, planPricing.getDatasetsLimit());
-                throw new UnsupportedPricingPlanException("The current pricing plan (" + planPricing + ") allows up to " + planPricing.getDatasetsLimit() + " datasets, but the number of datasets in the source exceeds this limit.");
+    public static void validateLimits(List<List<String>> records, PricingPlan pricingPlan) {
+        if (!pricingPlan.equals(PricingPlan.ULTRA)) {
+            if (records.size() > pricingPlan.getRecordsLimit()) {
+                log.error("The current pricing plan ({}) allows up to {} records, but the number of records in the source exceeds this limit.", pricingPlan, pricingPlan.getRecordsLimit());
+                throw new UnsupportedPricingPlanException("The current pricing plan (" + pricingPlan + ") allows up to " + pricingPlan.getRecordsLimit() + " records, but the number of records in the source exceeds this limit.");
             }
         }
     }

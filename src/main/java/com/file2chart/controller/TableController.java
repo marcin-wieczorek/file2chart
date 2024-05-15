@@ -31,6 +31,7 @@ public class TableController implements TableAPI {
 
     @Override
     @SecuredRapidApiCall
+    @SecuredRapidApiPricingPlan(pricingPlans = {PricingPlan.BASIC, PricingPlan.MEGA, PricingPlan.PRO, PricingPlan.ULTRA})
     public ResponseEntity<VisualizationHashResponse> generateTableHash(MultipartFile file, HttpServletRequest request) {
         PricingPlan pricingPlan = securityService.getPricingPlan(request);
         TableOutput tableOutput = tableService.generateTableOutput(file, pricingPlan);
@@ -45,6 +46,7 @@ public class TableController implements TableAPI {
 
     @Override
     @SecuredRapidApiCall
+    @SecuredRapidApiPricingPlan(pricingPlans = {PricingPlan.BASIC, PricingPlan.MEGA, PricingPlan.PRO, PricingPlan.ULTRA})
     public String generateEmbeddedTableVisualization(EmbeddedTableVisualizationRequest input, Model model, HttpServletRequest request) {
         model.addAttribute("data", tableService.deserializeTable(input.getHash()));
         return "table/index";
@@ -52,7 +54,7 @@ public class TableController implements TableAPI {
 
     @Override
     @SecuredRapidApiCall
-    @SecuredRapidApiPricingPlan
+    @SecuredRapidApiPricingPlan(pricingPlans = {PricingPlan.PRO, PricingPlan.ULTRA})
     public ResponseEntity<InputStreamResource> generateImageTableVisualization(ImageTableVisualizationRequest input, Model model, HttpServletRequest request) {
         model.addAttribute("data", tableService.deserializeTable(input.getHash()));
         InputStreamResource inputStreamResource = screenCaptureTool.captureScreen(model, "table/index");

@@ -55,7 +55,7 @@ public abstract class BaseFileResolver<T> implements FileResolver<T> {
                     CharValidator.validateStringValue(recordValueElement);
                     description.add(recordValueElement == null ? "" : recordValueElement);
                 } else {
-                    recordValueElement = recordValueElement.replace(',', '.'); // Zamiana przecinka na kropkę
+                    recordValueElement = recordValueElement.replace(',', '.');
                     CharValidator.validateNumericValue(recordValueElement);
                     datasets.get(headerElement)
                             .add(recordValueElement == null ? "0" : recordValueElement);

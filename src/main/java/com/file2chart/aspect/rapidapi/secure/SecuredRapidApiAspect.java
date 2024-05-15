@@ -1,5 +1,6 @@
 package com.file2chart.aspect.rapidapi.secure;
 
+import com.file2chart.model.enums.PricingPlan;
 import com.file2chart.service.security.SecurityService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Profile("prod")
 @Aspect
@@ -30,9 +33,17 @@ public class SecuredRapidApiAspect {
 
     @Around("@annotation(com.file2chart.aspect.rapidapi.secure.SecuredRapidApiPricingPlan)")
     public Object validateRapidApiPricingPlan(ProceedingJoinPoint joinPoint) throws Throwable {
+        SecuredRapidApiPricingPlan annotation = joinPoint.getTarget()
+                                                         .getClass()
+                                                         .getMethod(joinPoint.getSignature().getName())
+                                                         .getAnnotation(SecuredRapidApiPricingPlan.class);
+
+        PricingPlan[] arguments = annotation.pricingPlans();
+        List<PricingPlan> pricingPlans = List.of(arguments);
+
         for (Object arg : joinPoint.getArgs()) {
             if (arg instanceof HttpServletRequest request) {
-                securityService.validateRapidApiPricingPlanHeaders(request);
+                securityService.validateRapidApiPricingPlanHeaders(request, pricingPlans);
             }
         }
 
