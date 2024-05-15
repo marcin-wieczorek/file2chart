@@ -27,14 +27,24 @@ public class SecurityService {
     private static final String RAPID_API_PRICING_PLAN_HEADER_NAME = "X-RapidAPI-Proxy-Pricing-Plan";
 
     public void validateRapidApiSecretHeaders(HttpServletRequest request) {
-        validateHeader(request, RAPID_API_SECRET_HEADER_NAME, apiKeysConfig.getRapidApi());
+        boolean isValid = isHeaderValid(request, RAPID_API_SECRET_HEADER_NAME, apiKeysConfig.getRapidApi());
+
+        if (!isValid) {
+            log.error("Cannot find valid header. {'headerName': '{}'}", RAPID_API_SECRET_HEADER_NAME);
+            throw new BadCredentialsException("Invalid API Key");
+        }
     }
 
     public void validateRapidApiPricingPlanHeaders(HttpServletRequest request, List<PricingPlan> pricingPlans) {
         List<String> expectedPricingPlans = pricingPlans.stream()
                                                         .map(Object::toString)
                                                         .collect(Collectors.toList());
-        validateHeader(request, RAPID_API_PRICING_PLAN_HEADER_NAME, expectedPricingPlans);
+        boolean isValid = isHeaderValid(request, RAPID_API_PRICING_PLAN_HEADER_NAME, expectedPricingPlans);
+
+        if (!isValid) {
+            log.error("The current pricing plan does not allow for this operation. {'headerName': '{}', 'expectedHeaderValues': '{}'}", RAPID_API_PRICING_PLAN_HEADER_NAME, expectedPricingPlans);
+            throw new UnsupportedPricingPlanException("The current pricing plan does not allow for this operation");
+        }
     }
 
     public PricingPlan getPricingPlan(HttpServletRequest request) {
@@ -46,23 +56,15 @@ public class SecurityService {
                                       });
     }
 
-    private void validateHeader(HttpServletRequest request, String headerName, String expectedHeaderValue) {
-        requestScrappingService.getHeaderValue(request, headerName)
-                               .filter(headerValue -> expectedHeaderValue.equals(headerValue))
-                               .orElseThrow(() -> {
-                                   log.error("Cannot find valid header. {'headerName': '{}', 'expectedHeaderValue': '{}'}", headerName, expectedHeaderValue);
-                                   return new BadCredentialsException("Invalid API Key");
-                               });
+    private boolean isHeaderValid(HttpServletRequest request, String headerName, String expectedHeaderValue) {
+        return requestScrappingService.getHeaderValue(request, headerName)
+                                      .map(headerValue -> expectedHeaderValue.equals(headerValue))
+                                      .orElse(false);
     }
 
-    private void validateHeader(HttpServletRequest request, String headerName, List<String> expectedHeaderValues) {
-        boolean isValid = Stream.of(requestScrappingService.getHeaderValue(request, headerName))
-                                .flatMap(Optional::stream)
-                                .anyMatch(headerValue -> expectedHeaderValues.stream().anyMatch(headerValue::equals));
-
-        if (!isValid) {
-            log.error("The current pricing plan does not allow for this operation. {'headerName': '{}', 'expectedHeaderValues': '{}'}", headerName, expectedHeaderValues);
-            throw new UnsupportedPricingPlanException("The current pricing plan does not allow for this operation");
-        }
+    private boolean isHeaderValid(HttpServletRequest request, String headerName, List<String> expectedHeaderValues) {
+        return Stream.of(requestScrappingService.getHeaderValue(request, headerName))
+                     .flatMap(Optional::stream)
+                     .anyMatch(headerValue -> expectedHeaderValues.stream().anyMatch(headerValue::equals));
     }
 }

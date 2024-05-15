@@ -108,6 +108,18 @@ public interface ChartAPI {
                                                "debugMessage":""
                                             }
                                             """
+                            ),
+                            @ExampleObject(
+                                    name = "UNSUPPORTED_PRICING_PLAN",
+                                    value = """
+                                            {
+                                               "status":"UNAUTHORIZED",
+                                               "code":"UNSUPPORTED_PRICING_PLAN",
+                                               "timestamp":"13-05-2024 10:29:29",
+                                               "message":"Current pricing plan is not supported for this operation.",
+                                               "debugMessage":""
+                                            }
+                                            """
                             )
                     }))
     @ApiResponse(
@@ -249,6 +261,18 @@ public interface ChartAPI {
                                                "debugMessage":""
                                             }
                                             """
+                            ),
+                            @ExampleObject(
+                                    name = "UNSUPPORTED_PRICING_PLAN",
+                                    value = """
+                                            {
+                                               "status":"UNAUTHORIZED",
+                                               "code":"UNSUPPORTED_PRICING_PLAN",
+                                               "timestamp":"13-05-2024 10:29:29",
+                                               "message":"Current pricing plan is not supported for this operation.",
+                                               "debugMessage":""
+                                            }
+                                            """
                             )
                     }))
     @ApiResponse(
@@ -302,7 +326,7 @@ public interface ChartAPI {
                                             """
                             )
                     }))
-    @PostMapping(value = "/chart/visualization/embedded", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = {MediaType.TEXT_HTML_VALUE})
+    @PostMapping(value = "/chart/visualization/embedded", consumes = MediaType.APPLICATION_JSON_VALUE, produces = {MediaType.TEXT_HTML_VALUE})
     String generateEmbeddedChartVisualization(@RequestBody EmbeddedChartVisualizationRequest input, Model model, HttpServletRequest request);
 
     @Operation(description = "Generate visualisation data based on provided hash as a image (.png)")
@@ -387,6 +411,18 @@ public interface ChartAPI {
                                                "debugMessage":""
                                             }
                                             """
+                            ),
+                            @ExampleObject(
+                                    name = "UNSUPPORTED_PRICING_PLAN",
+                                    value = """
+                                            {
+                                               "status":"UNAUTHORIZED",
+                                               "code":"UNSUPPORTED_PRICING_PLAN",
+                                               "timestamp":"13-05-2024 10:29:29",
+                                               "message":"Current pricing plan is not supported for this operation.",
+                                               "debugMessage":""
+                                            }
+                                            """
                             )
                     }))
     @ApiResponse(
@@ -440,6 +476,6 @@ public interface ChartAPI {
                                             """
                             )
                     }))
-    @PostMapping(value = "/chart/visualization/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @PostMapping(value = "/chart/visualization/image", consumes = MediaType.APPLICATION_JSON_VALUE, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     ResponseEntity<InputStreamResource> generateImageChartVisualization(@RequestBody ImageChartVisualizationRequest input, Model model, HttpServletRequest request);
 }
