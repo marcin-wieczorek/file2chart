@@ -5,7 +5,6 @@ import com.file2chart.exceptions.http.HttpNotFoundException;
 import com.file2chart.exceptions.http.HttpUnauthorizedException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -20,35 +19,35 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleInternalServerException(Exception ex) {
-        return buildResponseEntity(buildError(ex), HttpStatus.INTERNAL_SERVER_ERROR);
+        return buildResponseEntity(buildError(ex));
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
     public <T extends NoResourceFoundException> ResponseEntity<Object> handleForbiddenException(T ex) {
-        return buildResponseEntity(buildError(ex), HttpStatus.FORBIDDEN);
+        return buildResponseEntity(buildError(ex));
     }
 
     @ExceptionHandler(HttpBadRequestException.class)
     public <T extends HttpBadRequestException> ResponseEntity<Object> handleBadRequestException(T ex) {
-        return buildResponseEntity(buildError(ex), HttpStatus.BAD_REQUEST);
+        return buildResponseEntity(buildError(ex));
     }
 
     @ExceptionHandler(HttpNotFoundException.class)
     public <T extends HttpNotFoundException> ResponseEntity<Object> handleNotFoundExceptionException(T ex) {
-        return buildResponseEntity(buildError(ex), HttpStatus.NOT_FOUND);
+        return buildResponseEntity(buildError(ex));
     }
 
     @ExceptionHandler(HttpUnauthorizedException.class)
     public <T extends HttpUnauthorizedException> ResponseEntity<Object> handleUnauthorizedExceptionException(T ex) {
-        return buildResponseEntity(buildError(ex), HttpStatus.UNAUTHORIZED);
+        return buildResponseEntity(buildError(ex));
     }
 
     public ApiError buildError(Exception ex) {
         return apiErrorTranslator.getApiError(ex);
     }
 
-    public static ResponseEntity<Object> buildResponseEntity(ApiError apiError, HttpStatus httpStatus) {
-        return new ResponseEntity<>(apiError, httpStatus);
+    public static ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
+        return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
 }
