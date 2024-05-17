@@ -4,7 +4,7 @@ import com.file2chart.exceptions.ErrorCode;
 import com.file2chart.exceptions.http.HttpBadRequestException;
 
 public class SerializationException extends HttpBadRequestException {
-    private static ErrorCode code = ErrorCode.HASH_VALIDATION_ERROR;
+    private static ErrorCode code = ErrorCode.VALIDATION_HASH_ERROR;
 
     public SerializationException() {
         super();

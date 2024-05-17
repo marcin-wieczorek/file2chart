@@ -4,6 +4,9 @@ import com.file2chart.exceptions.http.HttpException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.ErrorResponse;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -20,6 +23,9 @@ public class ApiErrorTranslator {
         apiErrors = new HashMap() {{
             put(NoResourceFoundException.class, new ApiError(HttpStatus.FORBIDDEN, ErrorCode.AUTHORIZATION_FORBIDDEN_ACCESS, ErrorCode.AUTHORIZATION_FORBIDDEN_ACCESS.getMessage()));
             put(HttpServerErrorException.InternalServerError.class, new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.UNKNOWN, ErrorCode.UNKNOWN.getMessage()));
+            put(MethodArgumentNotValidException.class, new ApiError(HttpStatus.BAD_REQUEST, ErrorCode.VALIDATION_ERROR, ErrorCode.VALIDATION_ERROR.getMessage()));
+            put(HttpMessageNotReadableException.class, new ApiError(HttpStatus.BAD_REQUEST, ErrorCode.VALIDATION_ERROR, ErrorCode.VALIDATION_ERROR.getMessage()));
+            put(HttpMessageNotReadableException.class, new ApiError(HttpStatus.BAD_REQUEST, ErrorCode.VALIDATION_ERROR, ErrorCode.VALIDATION_ERROR.getMessage()));
         }};
     }
 
@@ -43,6 +49,11 @@ public class ApiErrorTranslator {
             return new ApiError(ex1);
         }
 
-        return getApiError(ex.getClass(), ex.getLocalizedMessage());
+        String errorMessage = ex.getLocalizedMessage();
+        if (ex instanceof ErrorResponse ex2) {
+            errorMessage = ex2.getBody().getDetail();
+        }
+
+        return getApiError(ex.getClass(), errorMessage);
     }
 }

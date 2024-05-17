@@ -2,10 +2,10 @@ package com.file2chart.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.file2chart.exceptions.http.HttpException;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data

@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -175,7 +177,7 @@ public interface ChartAPI {
                     }))
     @PostMapping(value = "/chart/hash", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<VisualizationHashResponse> generateChartHash(
-            @Parameter(description = "File to upload, which will serve as the source for creating the chart. <b>Only .csv format is currently supported.</b>") @RequestParam MultipartFile file,
+            @Parameter(description = "File to upload, which will serve as the source for creating the chart. <b>Only .csv format is currently supported.</b>") @RequestParam @NotNull MultipartFile file,
             HttpServletRequest request
     );
 
@@ -327,7 +329,7 @@ public interface ChartAPI {
                             )
                     }))
     @PostMapping(value = "/chart/visualization/embedded", consumes = MediaType.APPLICATION_JSON_VALUE, produces = {MediaType.TEXT_HTML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    String generateEmbeddedChartVisualization(@RequestBody EmbeddedChartVisualizationRequest input, Model model, HttpServletRequest request);
+    String generateEmbeddedChartVisualization(@Valid @RequestBody EmbeddedChartVisualizationRequest input, Model model, HttpServletRequest request);
 
     @Operation(description = "Generate visualisation data based on provided hash as a image (.png)")
     @ApiResponse(responseCode = "200", description = "Visualization data as a image (.png) .", content = @Content(schema = @Schema(implementation = Byte.class), mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE))
@@ -477,5 +479,5 @@ public interface ChartAPI {
                             )
                     }))
     @PostMapping(value = "/chart/visualization/image", consumes = MediaType.APPLICATION_JSON_VALUE, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    ResponseEntity<InputStreamResource> generateImageChartVisualization(@RequestBody ImageChartVisualizationRequest input, Model model, HttpServletRequest request);
+    ResponseEntity<InputStreamResource> generateImageChartVisualization(@Valid @RequestBody ImageChartVisualizationRequest input, Model model, HttpServletRequest request);
 }
