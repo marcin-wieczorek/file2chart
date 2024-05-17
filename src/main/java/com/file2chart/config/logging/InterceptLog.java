@@ -1,4 +1,4 @@
-package com.file2chart.service.logging;
+package com.file2chart.config.logging;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

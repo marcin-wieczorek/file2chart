@@ -1,6 +1,5 @@
 package com.file2chart.config.logging;
 
-import com.file2chart.service.logging.InterceptLog;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

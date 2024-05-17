@@ -1,10 +1,12 @@
-package com.file2chart.service.logging;
+package com.file2chart.config.logging;
 
+import com.file2chart.exceptions.custom.JsonConversionException;
 import com.file2chart.service.utils.JsonConverter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -30,7 +32,13 @@ public class LoggingServiceImpl implements LoggingService {
         }
 
         if(!Objects.isNull(body)) {
-            reqMessage.append(" requestBody = \n").append(converter.toJSON(body, true)).append("\n");
+            try {
+                body = converter.toJSON(body, true);
+            } catch (JsonConversionException e) {
+
+            } finally {
+                reqMessage.append(" requestBody = \n").append(body).append("\n");
+            }
         }
 
         log.info("logRequest: \n{}", reqMessage);
@@ -45,7 +53,18 @@ public class LoggingServiceImpl implements LoggingService {
         if(!headers.isEmpty()) {
             respMessage.append(" ResponseHeaders = [").append(headers).append("]");
         }
-        respMessage.append(" responseBody = \n").append(converter.toJSON(body, true)).append("\n");
+
+        if (body instanceof InputStreamResource) {
+            respMessage.append(" requestBody = \n").append("inputStreamResource").append("\n");
+        } else {
+            try {
+                body = converter.toJSON(body, true);
+            } catch (JsonConversionException e) {
+
+            } finally {
+                respMessage.append(" requestBody = \n").append(body).append("\n");
+            }
+        }
 
         log.info("logResponse: \n{}", respMessage);
     }

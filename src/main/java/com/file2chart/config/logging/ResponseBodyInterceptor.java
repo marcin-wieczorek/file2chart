@@ -1,6 +1,5 @@
 package com.file2chart.config.logging;
 
-import com.file2chart.service.logging.LoggingService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

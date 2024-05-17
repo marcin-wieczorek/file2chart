@@ -1,6 +1,5 @@
 package com.file2chart.config.logging;
 
-import com.file2chart.service.logging.LoggingService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.core.MethodParameter;
