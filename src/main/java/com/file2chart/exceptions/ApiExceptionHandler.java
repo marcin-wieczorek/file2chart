@@ -44,9 +44,7 @@ public class ApiExceptionHandler {
     }
 
     public ApiError buildError(Exception ex) {
-        ApiError apiError = apiErrorTranslator.getApiError(ex);
-        log.error("{'apiError': '{}', 'stackTrace': '{}'", apiError, ex.getStackTrace());
-        return apiError;
+        return apiErrorTranslator.getApiError(ex);
     }
 
     public static ResponseEntity<Object> buildResponseEntity(ApiError apiError, HttpStatus httpStatus) {
